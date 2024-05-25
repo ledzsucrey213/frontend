@@ -22,10 +22,10 @@ root.render(
       <Router>
         <Routes>
           <Route path="/" element={<App />}>
-            <Route index={true} element={<SignIn/>} />
+            <Route index={true} element={<Home/>} />
             <Route path="reset-password" element = {<ForgottenPassword/>} />
             <Route path="reset-password2" element = {<ForgottenPasswordNum/>} />
-            <Route path="accueil" element = {<Home/>} />
+            <Route path="login" element = {<SignIn/>} />
             <Route path="signup" element = {<SignUp/>} />
             <Route path="quiz" element = {<Quiz/>} />
             <Route path="chap-quiz" element = {<ChaptersPageQuiz/>} />
