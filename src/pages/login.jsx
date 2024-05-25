@@ -13,6 +13,7 @@ import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { useLogin } from '../hooks/useLogin';
+import { useNavigate } from 'react-router-dom';
 
 function Copyright(props) {
   return (
@@ -27,25 +28,25 @@ function Copyright(props) {
   );
 }
 
-// TODO remove, this demo shouldn't need to reset the theme.
-
 const defaultTheme = createTheme();
 
 export default function SignIn() {
-  const {login, error, isLoading} = useLogin();
+  const { login, error, isLoading } = useLogin();
+  const navigate = useNavigate();
 
   const handleSubmit = async (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-    console.log({
-      email: data.get('email'),
-      password: data.get('password'),
-    });
+    const email = data.get('email');
+    const password = data.get('password');
 
-    await login(email, password);
+    console.log({ email, password });
+
+    const success = await login(email, password);
+    if (success) {
+      navigate('/');
+    }
   };
-
-
 
   return (
     <ThemeProvider theme={defaultTheme}>
@@ -99,7 +100,7 @@ export default function SignIn() {
             >
               Connexion
             </Button>
-            {error && <div className="error">{error}</div>}
+            {error && <div className="error" style={{ color: 'red' }}>{error}</div>}
             <Grid container>
               <Grid item xs>
                 <Link href="/reset-password" variant="body2">
@@ -108,7 +109,7 @@ export default function SignIn() {
               </Grid>
               <Grid item>
                 <Link href="/signup" variant="body2">
-                  {"Pas de compte? Incris-toi!"}
+                  {"Pas de compte? Inscris-toi!"}
                 </Link>
               </Grid>
             </Grid>
@@ -119,3 +120,7 @@ export default function SignIn() {
     </ThemeProvider>
   );
 }
+
+
+
+

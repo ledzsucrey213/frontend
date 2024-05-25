@@ -73,7 +73,7 @@ function HomeLoggedOut() {
         Pour accéder aux fonctionnalités de QCM PASS, veuillez vous connecter.
       </Typography>
       <Box sx={{ mt: 2, textAlign: 'center' }}> {/* Espacement entre le texte et le bouton */}
-        <Button component={Link} to="/connexion" variant="contained">Se connecter</Button>
+        <Button component={Link} to="/login" variant="contained">Se connecter</Button>
       </Box>
     </Container>
   );

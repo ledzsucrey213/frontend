@@ -3,34 +3,49 @@ import { useAuthContext } from './useAuthContext';
 import axios from 'axios';
 
 export const useSignup = () => {
-    const [error, setError] = useState(null)
-    const [isLoading, setIsLoading] = useState(null)
-    const { dispatch } = useAuthContext()
+    const [error, setError] = useState(null);
+    const [isLoading, setIsLoading] = useState(false);
+    const [success, setSuccess] = useState(false);
+    const { dispatch } = useAuthContext();
 
-    const signup = async (email, password) => {
-        setIsLoading(true)
-        setError(null)
+    const signup = async (username, email, password, nom, prenom, numero, adresse) => {
+        setIsLoading(true);
+        setError(null);
+        setSuccess(false);
 
+        try {
+            const response = await axios.post(`http://localhost:3000/api/user/signup`, {
+                username,
+                email,
+                password,
+                nom,
+                prenom,
+                numero,
+                adresse
+            });
 
-        const response = axios.post(`${import.meta.env.REACT_APP_BACKEND_URL}/api/user/signup`)
-
-
-        const json = await response.json()
-
-        if (!response.ok) {
-            setIsLoading(false)
-            setError(json.error)
+            if (response.status === 200) {
+                const { email, token, _id } = response.data;
+                localStorage.setItem('user', JSON.stringify({ email, token, _id }));
+                const user = { email, _id };
+                dispatch({ type: 'LOGIN', payload: user });
+                setSuccess(true);
+                return true;
+            }
+        } catch (error) {
+            if (error.response && error.response.data) {
+                setError(error.response.data.error || "An error occurred. Please try again.");
+            } else {
+                setError("An error occurred. Please try again.");
+            }
+            return false;
+        } finally {
+            setIsLoading(false);
         }
-        if (response.ok) {
-            // save the user to local storage
-            localStorage.setItem('user', JSON.stringify(json))
+    };
 
-            // update the auth context
-            dispatch({type : 'LOGIN', payload: json})
-
-            setIsLoading(false)
-        }
-    }
-
-    return { signup, isLoading, error }
+    return { signup, isLoading, error, success };
 }
+
+
+
