@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { useState } from 'react';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -33,6 +34,7 @@ const defaultTheme = createTheme();
 export default function SignIn() {
   const { login, error, isLoading } = useLogin();
   const navigate = useNavigate();
+  const [showPassword, setShowPassword] = useState(false);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -46,6 +48,10 @@ export default function SignIn() {
     if (success) {
       navigate('/');
     }
+  };
+
+  const handleToggleShowPassword = () => {
+    setShowPassword((prevShowPassword) => !prevShowPassword);
   };
 
   return (
@@ -83,13 +89,19 @@ export default function SignIn() {
               fullWidth
               name="password"
               label="Mot de passe"
-              type="password"
+              type={showPassword ? 'text' : 'password'}
               id="password"
               autoComplete="current-password"
             />
             <FormControlLabel
-              control={<Checkbox value="remember" color="primary" />}
-              label="Se souvenir de moi"
+              control={
+                <Checkbox
+                  checked={showPassword}
+                  onChange={handleToggleShowPassword}
+                  color="primary"
+                />
+              }
+              label="Afficher le mot de passe"
             />
             <Button
               type="submit"
@@ -120,6 +132,8 @@ export default function SignIn() {
     </ThemeProvider>
   );
 }
+
+
 
 
 

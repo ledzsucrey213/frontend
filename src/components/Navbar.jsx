@@ -3,7 +3,7 @@ import { AppBar, Toolbar, Typography, Button, Box } from '@mui/material';
 import { Link } from 'react-router-dom';
 import { useLogout } from '../hooks/useLogout';
 import { useAuthContext } from '../hooks/useAuthContext';
-import useProfile from '../hooks/useProfile';
+import { useProfile } from '../hooks/useProfile';
 
 const Navbar = () => {
   const { logout } = useLogout();
@@ -22,32 +22,37 @@ const Navbar = () => {
             <Link to="/" style={{ textDecoration: 'none', color: 'inherit' }}>
               <Button color="inherit" sx={{ mr: 2 }}>Accueil</Button>
             </Link>
-            {/* Redirige vers /matieres-quiz si user existe, sinon redirige vers /login */}
             {user ? (
-              <Link to="/matieres-quiz" style={{ textDecoration: 'none', color: 'inherit' }}>
-                <Button color="inherit" sx={{ mr: 2 }}>Quiz</Button>
-              </Link>
+              <>
+                <Link to="/matieres-quiz" style={{ textDecoration: 'none', color: 'inherit' }}>
+                  <Button color="inherit" sx={{ mr: 2 }}>Quiz</Button>
+                </Link>
+                <Link to="/matieres-cours" style={{ textDecoration: 'none', color: 'inherit' }}>
+                  <Button color="inherit" sx={{ mr: 2 }}>Cours</Button>
+                </Link>
+              </>
             ) : (
-              <Link to="/login" style={{ textDecoration: 'none', color: 'inherit' }}>
-                <Button color="inherit">Quiz</Button>
-              </Link>
-            )}
-            {/* Redirige vers /matieres-cours si user existe, sinon redirige vers /login */}
-            {user ? (
-              <Link to="/matieres-cours" style={{ textDecoration: 'none', color: 'inherit' }}>
-                <Button color="inherit" sx={{ mr: 2 }}>Cours</Button>
-              </Link>
-            ) : (
-              <Link to="/login" style={{ textDecoration: 'none', color: 'inherit' }}>
-                <Button color="inherit">Cours</Button>
-              </Link>
+              <>
+                <Link to="/login" style={{ textDecoration: 'none', color: 'inherit' }}>
+                  <Button color="inherit">Quiz</Button>
+                </Link>
+                <Link to="/login" style={{ textDecoration: 'none', color: 'inherit' }}>
+                  <Button color="inherit">Cours</Button>
+                </Link>
+              </>
             )}
           </Box>
         </Typography>
         <Box sx={{ display: 'flex', alignItems: 'center' }}>
           {user ? (
             <>
-              <Typography variant="body1" color="inherit" sx={{ mr: 2 }}>{profile ? profile.prenom : ''}</Typography>
+              {profile && (
+                <Link to="/settings" style={{ textDecoration: 'none', color: 'inherit' }}>
+                  <Button color="inherit" sx={{ mr: 2 }}>
+                    {profile.prenom}
+                  </Button>
+                </Link>
+              )}
               <Button onClick={handleClick} color="inherit">Déconnexion</Button>
             </>
           ) : (
@@ -62,6 +67,3 @@ const Navbar = () => {
 };
 
 export default Navbar;
-
-
-

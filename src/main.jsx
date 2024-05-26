@@ -13,6 +13,7 @@ import ChaptersPageCours from './pages/chapitresCours';
 import MatieresPageCours from './pages/matieresCours';
 import MatieresPageQuiz from './pages/matieresQuiz';
 import Checkout from './pages/checkout/checkout';
+import Settings from './pages/settings';
 import { AuthContextProvider } from './context/AuthContext';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
@@ -33,6 +34,7 @@ root.render(
             <Route path="matieres-cours" element = {<MatieresPageCours/>} />
             <Route path="matieres-quiz" element = {<MatieresPageQuiz/>} />
             <Route path="checkout" element = {<Checkout/>} />
+            <Route path="settings" element = {<Settings/>} />
           </Route>
         </Routes>
       </Router>

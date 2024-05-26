@@ -1,24 +1,39 @@
 import React, { useState, useEffect } from 'react';
 import { AppBar, Toolbar, Typography, Button, Box, Grid } from '@mui/material';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 import axios from 'axios';
+import { useAuthContext } from '../hooks/useAuthContext';
 
 function ChaptersPageQuiz() {
   const [chapters, setChapters] = useState([]);
   const location = useLocation();
+  const navigate = useNavigate();
+  const { user } = useAuthContext();
   const matiereId = new URLSearchParams(location.search).get('matiere');
 
   useEffect(() => {
-    // Effectue une requête Axios pour récupérer les chapitres de la matière sélectionnée depuis votre API
-    axios.get(`http://localhost:3000/api/chapitre/matiere/${matiereId}`)
-      .then(response => {
-        setChapters(response.data); // Met à jour l'état avec les chapitres récupérés depuis l'API
-      })
-      .catch(error => {
-        console.error('Erreur lors de la récupération des chapitres :', error);
-      });
-  }, [matiereId]); // Mettez à jour les chapitres lorsque l'identifiant de la matière change
+    if (!user) {
+      navigate('/login');
+    }
+  }, [user, navigate]);
+
+  useEffect(() => {
+    if (user && matiereId) {
+      // Effectue une requête Axios pour récupérer les chapitres de la matière sélectionnée depuis votre API
+      axios.get(`http://localhost:3000/api/chapitre/matiere/${matiereId}`)
+        .then(response => {
+          setChapters(response.data); // Met à jour l'état avec les chapitres récupérés depuis l'API
+        })
+        .catch(error => {
+          console.error('Erreur lors de la récupération des chapitres :', error);
+        });
+    }
+  }, [user, matiereId]); // Mettez à jour les chapitres lorsque l'identifiant de la matière change
+
+  if (!user) {
+    return null; // ou un spinner de chargement ou tout autre indicateur visuel
+  }
 
   return (
     <Box sx={{ flexGrow: 1 }}>
@@ -54,6 +69,7 @@ function ChaptersPageQuiz() {
 }
 
 export default ChaptersPageQuiz;
+
 
 
 

@@ -3,16 +3,9 @@ import React, { createContext, useReducer, useEffect } from 'react';
 // Define the shape of the context value
 const AuthContext = createContext({
   user: null,
+  token: null,
   dispatch: () => {},
 });
-
-// Define the shape of a user
-// Here are the information shown to the user after login
-// You should define your actual User type
-const User = {
-  email: "",
-  _id: "",
-};
 
 // Define the shape of an authentication action
 const AuthActionType = {
@@ -24,9 +17,9 @@ const AuthActionType = {
 const authReducer = (state, action) => {
   switch (action.type) {
     case AuthActionType.LOGIN:
-      return { ...state, user: action.payload };
+      return { ...state, user: action.payload.user, token: action.payload.token };
     case AuthActionType.LOGOUT:
-      return { ...state, user: null };
+      return { ...state, user: null, token: null };
     default:
       return state;
   }
@@ -35,6 +28,7 @@ const authReducer = (state, action) => {
 // Initial state
 const initialState = {
   user: null,
+  token: null,
   dispatch: () => {},
 };
 
@@ -42,25 +36,22 @@ const initialState = {
 const AuthContextProvider = ({ children }) => {
   const [state, dispatch] = useReducer(authReducer, initialState);
 
-  // [] means only do it once when the component renders (check token in localStorage)
   useEffect(() => {
     const userString = localStorage.getItem('user');
-
-    if (userString) {
+    const token = localStorage.getItem('token');
+    if (userString && token) {
       const user = JSON.parse(userString);
-      if (user && user.email && user._id) {
-        const { email, _id} = user;
-        const updatedUser = { email, _id};
-        dispatch({ type: AuthActionType.LOGIN, payload: updatedUser });
-      }
+      dispatch({ type: AuthActionType.LOGIN, payload: { user, token } });
     }
   }, []);
 
   return (
-    <AuthContext.Provider value={{ user: state.user, dispatch }}>
+    <AuthContext.Provider value={{ user: state.user, token: state.token, dispatch }}>
       {children}
     </AuthContext.Provider>
   );
 };
 
-export { AuthContext, AuthContextProvider, AuthActionType, User };
+export { AuthContext, AuthContextProvider, AuthActionType };
+
+

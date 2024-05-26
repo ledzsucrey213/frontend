@@ -179,7 +179,7 @@ export default function SignUp() {
             {confirmPasswordError && <div className="error" style={{ color: 'red' }}>{confirmPasswordError}</div>}
             <Grid container justifyContent="flex-end">
               <Grid item>
-                <Link href="/" variant="body2">
+                <Link href="/login" variant="body2">
                   Déjà un compte? Connecte-toi!
                 </Link>
               </Grid>
