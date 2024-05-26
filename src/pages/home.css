@@ -1,0 +1,85 @@
+/* home.css */
+
+/* Container settings */
+.container {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 20px;
+  }
+  
+  /* Box settings */
+  .section-box {
+    margin-top: 20px;
+    margin-bottom: 20px;
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  /* Typography settings */
+  .section-title {
+    font-size: 3rem;
+    font-weight: bold;
+    margin-bottom: 10px;
+    color: #000000;
+  }
+  
+  .section-description {
+    font-size: 1.2rem;
+    margin-bottom: 20px;
+    color: #000000;
+  }
+  
+  .section-image {
+    height: 140px;
+    object-fit: cover;
+    margin-bottom: 20px;
+  }
+  
+  .section-button {
+    font-size: 1rem;
+    padding: 10px 20px;
+  }
+  
+  /* Styles spécifiques pour HomeLoggedOut */
+  .home-logged-out-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    text-align: center;
+    flex-direction: row;
+  }
+  
+  .home-logged-out-left-image,
+  .home-logged-out-right-image {
+    width: 150px;
+    margin: 0 20px;
+  }
+  
+  .home-logged-out-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .home-logged-out-content .typography {
+    font-weight: bold;
+  }
+  
+  .home-logged-out-button {
+    background-color: #000000;
+    color: #ffffff;
+    margin-top: 20px;
+  }
+  
+  .home-logged-out-button:hover {
+    background-color: #7c7c7c;
+  }
+  
