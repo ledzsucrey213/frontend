@@ -14,6 +14,8 @@ import MatieresPageCours from './pages/matieresCours';
 import MatieresPageQuiz from './pages/matieresQuiz';
 import Checkout from './pages/checkout/checkout';
 import Settings from './pages/settings';
+import Progress from './pages/progress';
+import ScoreDetails from './pages/scoreDetails'
 import { AuthContextProvider } from './context/AuthContext';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
@@ -35,6 +37,8 @@ root.render(
             <Route path="matieres-quiz" element = {<MatieresPageQuiz/>} />
             <Route path="checkout" element = {<Checkout/>} />
             <Route path="settings" element = {<Settings/>} />
+            <Route path="progress" element = {<Progress/>} />
+            <Route path="score/:scoreId" element = {<ScoreDetails/>} />
           </Route>
         </Routes>
       </Router>

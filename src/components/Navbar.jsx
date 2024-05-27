@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import { useLogout } from '../hooks/useLogout';
 import { useAuthContext } from '../hooks/useAuthContext';
 import { useProfile } from '../hooks/useProfile';
+import logo from '../images/LOGO FINAL.webp'; // Import de l'image du logo
 
 const Navbar = () => {
   const { logout } = useLogout();
@@ -19,6 +20,9 @@ const Navbar = () => {
       <Toolbar sx={{ justifyContent: 'space-between' }}>
         <Typography variant="h6" component="div">
           <Box sx={{ display: 'flex', alignItems: 'center' }}>
+            <Link to="/" style={{ textDecoration: 'none', color: 'inherit' }}>
+              <img src={logo} alt="Logo" style={{ height: '60px', marginRight: '16px' }} /> {/* Logo plus grand */}
+            </Link>
             <Link to="/" style={{ textDecoration: 'none', color: 'inherit' }}>
               <Button color="inherit" sx={{ mr: 2 }}>Accueil</Button>
             </Link>
@@ -67,3 +71,4 @@ const Navbar = () => {
 };
 
 export default Navbar;
+
