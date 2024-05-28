@@ -2,7 +2,7 @@ import axios from 'axios';
 
 // Évite de répéter le passage du token sur chaque page
 const axiosInstance = axios.create({
-  baseURL: import.meta.env.VITE_BACKEND_URL,
+  baseURL: import.meta.env.REACT_APP_BACKEND_URL,
 });
 
 axiosInstance.interceptors.request.use(

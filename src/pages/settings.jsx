@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { Container, Typography, Box, TextField } from '@mui/material';
+import { Container, Typography, Box, TextField, Button } from '@mui/material';
 import Navbar from '../components/Navbar';
 import { useProfile } from '../hooks/useProfile';
 import { useAuthContext } from '../hooks/useAuthContext';
@@ -10,11 +10,9 @@ const Settings = () => {
   const { user } = useAuthContext();
   const navigate = useNavigate();
 
-  useEffect(() => {
-    if (!user) {
-      navigate('/login');
-    }
-  }, [user, navigate]);
+  if(!user) {
+    navigate('/login');
+  }
 
   if (!profile) {
     return <Typography>Chargement...</Typography>;
@@ -32,6 +30,14 @@ const Settings = () => {
             alignItems: 'center',
           }}
         >
+          <Button
+            variant="contained"
+            color="primary"
+            sx={{ mb: 2 }}
+            onClick={() => navigate('/progress')}
+          >
+            Voir la progression
+          </Button>
           <Typography component="h1" variant="h5">
             Paramètres du compte
           </Typography>
@@ -43,7 +49,7 @@ const Settings = () => {
               id="username"
               label="Nom d'utilisateur"
               name="username"
-              value={profile.username}
+              value={profile.username || ''}
               InputProps={{
                 readOnly: true,
               }}
@@ -55,7 +61,7 @@ const Settings = () => {
               id="email"
               label="Adresse email"
               name="email"
-              value={profile.email}
+              value={profile.email || ''}
               InputProps={{
                 readOnly: true,
               }}
@@ -79,7 +85,7 @@ const Settings = () => {
               id="prenom"
               label="Prénom"
               name="prenom"
-              value={profile.prenom}
+              value={profile.prenom || ''}
               InputProps={{
                 readOnly: true,
               }}
@@ -91,7 +97,7 @@ const Settings = () => {
               id="nom"
               label="Nom"
               name="nom"
-              value={profile.nom}
+              value={profile.nom || ''}
               InputProps={{
                 readOnly: true,
               }}
@@ -103,7 +109,7 @@ const Settings = () => {
               id="adresse"
               label="Adresse"
               name="adresse"
-              value={profile.adresse}
+              value={profile.adresse || ''}
               InputProps={{
                 readOnly: true,
               }}
@@ -115,7 +121,7 @@ const Settings = () => {
               id="numero"
               label="Numéro"
               name="numero"
-              value={profile.numero}
+              value={profile.numero || ''}
               InputProps={{
                 readOnly: true,
               }}
@@ -128,5 +134,7 @@ const Settings = () => {
 };
 
 export default Settings;
+
+
 
 

@@ -17,6 +17,8 @@ import Settings from './pages/settings';
 import Progress from './pages/progress';
 import ScoreDetails from './pages/scoreDetails'
 import { AuthContextProvider } from './context/AuthContext';
+import Modo from './pages/modo';
+import ChapterDetails from './pages/chapterDetails';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
@@ -39,6 +41,8 @@ root.render(
             <Route path="settings" element = {<Settings/>} />
             <Route path="progress" element = {<Progress/>} />
             <Route path="score/:scoreId" element = {<ScoreDetails/>} />
+            <Route path="/modo" element={<Modo />} />
+            <Route path="/chapitre/:chapterId" element={<ChapterDetails />} />
           </Route>
         </Routes>
       </Router>

@@ -1,6 +1,6 @@
 import React from 'react';
 import { AppBar, Toolbar, Typography, Button, Box } from '@mui/material';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useLogout } from '../hooks/useLogout';
 import { useAuthContext } from '../hooks/useAuthContext';
 import { useProfile } from '../hooks/useProfile';
@@ -10,6 +10,7 @@ const Navbar = () => {
   const { logout } = useLogout();
   const { user } = useAuthContext();
   const { profile } = useProfile();
+  const navigate = useNavigate();
 
   const handleClick = () => {
     logout();
@@ -50,6 +51,15 @@ const Navbar = () => {
         <Box sx={{ display: 'flex', alignItems: 'center' }}>
           {user ? (
             <>
+              {profile && profile.modo === 1 && (
+                <Button
+                  color="inherit"
+                  sx={{ mr: 2 }}
+                  onClick={() => navigate('/modo')}
+                >
+                  Administrateur
+                </Button>
+              )}
               {profile && (
                 <Link to="/settings" style={{ textDecoration: 'none', color: 'inherit' }}>
                   <Button color="inherit" sx={{ mr: 2 }}>
@@ -71,4 +81,6 @@ const Navbar = () => {
 };
 
 export default Navbar;
+
+
 

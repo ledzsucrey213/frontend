@@ -3,7 +3,7 @@ import { Typography, Container, Box, Paper, Table, TableBody, TableCell, TableCo
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { useAuthContext } from '../hooks/useAuthContext';
-import Navbar from '../components/Navbar'; 
+import Navbar from '../components/Navbar';
 
 const PAGE_SIZE = 10; // Nombre de scores à afficher par page
 
@@ -15,6 +15,11 @@ function Progress() {
   const navigate = useNavigate();
 
   useEffect(() => {
+    if (!user) {
+      navigate('/login');
+      return;
+    }
+
     const fetchScoresAndChapters = async () => {
       try {
         const response = await axios.get(`http://localhost:3000/api/score/student/${user._id}`);
@@ -23,7 +28,7 @@ function Progress() {
         const chapterPromises = fetchedScores.map(score => 
           axios.get(`http://localhost:3000/api/chapitre/${score.chapitre}`)
         );
-        
+
         const chapters = await Promise.all(chapterPromises);
         const scoresWithChapters = fetchedScores.map((score, index) => ({
           ...score,
@@ -38,10 +43,8 @@ function Progress() {
       }
     };
 
-    if (user) {
-      fetchScoresAndChapters();
-    }
-  }, [user]);
+    fetchScoresAndChapters();
+  }, [user, navigate]);
 
   const handlePageChange = (event, value) => {
     setCurrentPage(value);
@@ -105,4 +108,5 @@ function Progress() {
 }
 
 export default Progress;
+
 
