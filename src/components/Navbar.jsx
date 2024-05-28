@@ -51,7 +51,7 @@ const Navbar = () => {
         <Box sx={{ display: 'flex', alignItems: 'center' }}>
           {user ? (
             <>
-              {profile && profile.modo === 1 && (
+              {profile && (
                 <Button
                   color="inherit"
                   sx={{ mr: 2 }}

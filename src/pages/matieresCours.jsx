@@ -58,7 +58,7 @@ function MatieresPageCours() {
               fullWidth
               variant="outlined"
               component={Link}
-              to={`/chap-quiz?matiere=${matiere._id}`} // Redirige vers la page des chapitres avec l'ID de la matière en paramètre d'URL
+              to={`/chap-cours?matiere=${matiere._id}`} // Redirige vers la page des chapitres avec l'ID de la matière en paramètre d'URL
               sx={{ height: '100px', bgcolor: 'white', color: 'black', borderColor: 'black' }}
             >
               {matiere.nom}
