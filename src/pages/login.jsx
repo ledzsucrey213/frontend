@@ -15,6 +15,7 @@ import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { useLogin } from '../hooks/useLogin';
 import { useNavigate } from 'react-router-dom';
+import logo from '../images/LOGO FINAL.webp'; // Import de l'image du logo
 
 function Copyright(props) {
   return (
@@ -67,7 +68,7 @@ export default function SignIn() {
           }}
         >
           <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
-            <LockOutlinedIcon />
+            <img src={logo} alt="logo" style={{ width: '200%', height: '200%' }} />
           </Avatar>
           <Typography component="h1" variant="h5">
             Je me connecte

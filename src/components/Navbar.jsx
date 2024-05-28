@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { AppBar, Toolbar, Typography, Button, Box } from '@mui/material';
 import { Link, useNavigate } from 'react-router-dom';
 import { useLogout } from '../hooks/useLogout';
@@ -8,9 +8,27 @@ import logo from '../images/LOGO FINAL.webp'; // Import de l'image du logo
 
 const Navbar = () => {
   const { logout } = useLogout();
+  const navigate = useNavigate();
+  const [isAdmin, setIsAdmin] = useState(false);
+  const [loading, setLoading] = useState(true);
   const { user } = useAuthContext();
   const { profile } = useProfile();
-  const navigate = useNavigate();
+
+  console.log('Initial isAdmin:', isAdmin);
+  console.log('Initial loading:', loading);
+  console.log('Initial user:', user);
+
+  useEffect(() => {
+    if (profile) {
+      console.log('User available:', profile);
+      setIsAdmin(profile.modo);
+      setLoading(false);
+    } else {
+      console.log('No user available');
+      setIsAdmin(false);
+      setLoading(false);
+    }
+  }, [profile]);
 
   const handleClick = () => {
     logout();
@@ -51,7 +69,7 @@ const Navbar = () => {
         <Box sx={{ display: 'flex', alignItems: 'center' }}>
           {user ? (
             <>
-              {profile && (
+              {profile && isAdmin && (
                 <Button
                   color="inherit"
                   sx={{ mr: 2 }}
@@ -81,6 +99,7 @@ const Navbar = () => {
 };
 
 export default Navbar;
+
 
 
 
