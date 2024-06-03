@@ -14,14 +14,14 @@ function ScoreDetails() {
   useEffect(() => {
     const fetchScoreDetails = async () => {
       try {
-        const scoreResponse = await axios.get(`http://localhost:3000/api/score/${scoreId}`);
+        const scoreResponse = await axios.get(`${import.meta.env.REACT_APP_BACKEND_URL}/api/score/${scoreId}`);
         const fetchedScore = scoreResponse.data;
         
-        const chapterResponse = await axios.get(`http://localhost:3000/api/chapitre/${fetchedScore.chapitre}`);
+        const chapterResponse = await axios.get(`${import.meta.env.REACT_APP_BACKEND_URL}/api/chapitre/${fetchedScore.chapitre}`);
         const chapterName = chapterResponse.data.nom;
 
         const questionPromises = fetchedScore.quiz.map(questionId => 
-          axios.get(`http://localhost:3000/api/questions/${questionId}`)
+          axios.get(`${import.meta.env.REACT_APP_BACKEND_URL}/api/questions/${questionId}`)
         );
         
         const questions = await Promise.all(questionPromises);

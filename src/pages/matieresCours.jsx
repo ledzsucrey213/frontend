@@ -20,7 +20,7 @@ function MatieresPageCours() {
   useEffect(() => {
     if (user) {
       // Effectue une requête Axios pour récupérer les matières depuis votre API
-      axios.get('http://localhost:3000/api/matiere/')
+      axios.get(`${import.meta.env.REACT_APP_BACKEND_URL}/api/matiere/`)
         .then(response => {
           // Trie les matières selon leur nom
           const sortedMatieres = response.data.sort((a, b) => {

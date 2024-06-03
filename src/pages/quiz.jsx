@@ -19,7 +19,7 @@ function Quiz() {
   useEffect(() => {
     const getRandomQuestionFromChapter = async (chapitreId) => {
       try {
-        const response = await axios.get(`http://localhost:3000/api/questions/random/${chapitreId}`);
+        const response = await axios.get(`${import.meta.env.REACT_APP_BACKEND_URL}/api/questions/random/${chapitreId}`);
         const question = response.data;
 
         if (usedQuestions.has(question._id)) {
@@ -82,7 +82,7 @@ function Quiz() {
         chapitre: chapitreId
       };
       try {
-        await axios.post('http://localhost:3000/api/score/create', scoreData);
+        await axios.post(`${import.meta.env.REACT_APP_BACKEND_URL}/api/score/create`, scoreData);
         console.log("Score enregistré");
       } catch (error) {
         console.error('Erreur lors de la soumission du score :', error);

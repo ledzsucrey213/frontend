@@ -13,7 +13,7 @@ export const useSignup = () => {
     setError(null);
 
     try {
-      const response = await axios.post('http://localhost:3000/api/user/signup', { username, email, password, nom, prenom, numero, adresse });
+      const response = await axios.post(`${import.meta.env.REACT_APP_BACKEND_URL}/api/user/signup`, { username, email, password, nom, prenom, numero, adresse });
 
       // No need to parse JSON manually, axios does it for you
       const data = response.data;

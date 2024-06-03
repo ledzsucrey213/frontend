@@ -40,7 +40,7 @@ function ChaptersPageCours() {
 
   useEffect(() => {
     if (user && matiereId) {
-      axios.get(`http://localhost:3000/api/chapitre/matiere/${matiereId}`)
+      axios.get(`${import.meta.env.REACT_APP_BACKEND_URL}/api/chapitre/matiere/${matiereId}`)
         .then(response => {
           setChapters(response.data);
         })
