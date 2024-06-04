@@ -86,9 +86,9 @@ function Modo() {
           <Typography variant="h4" align="center" gutterBottom>
             Modération
           </Typography>
-          {/* <Button variant="contained" color="primary" onClick={handleClickOpen} sx={{ mt: 2, mb: 2 }}>
+          <Button variant="contained" color="primary" onClick={handleClickOpen} sx={{ mt: 2, mb: 2 }}>
             Soumettre un PDF
-          </Button> */}
+          </Button>
           <Paper elevation={3}>
             <List>
               {matieres.map((matiere) => (
