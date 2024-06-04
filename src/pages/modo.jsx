@@ -3,6 +3,7 @@ import { Typography, Container, Box, Paper, List, ListItem, ListItemText, Divide
 import axios from 'axios';
 import { useAuthContext } from '../hooks/useAuthContext';
 import Navbar from '../components/Navbar'; 
+import { Link } from 'react-router-dom'
 
 function Modo() {
   const [matieres, setMatieres] = useState([]);
