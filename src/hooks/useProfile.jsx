@@ -11,7 +11,7 @@ export const useProfile = () => {
       if (user && user._id) {
         try {
           console.log(`Fetching profile for user ID: ${user._id}`);
-          const response = await axios.get(`${import.meta.env.REACT_APP_BACKEND_URL}/api/user/${user._id}`);
+          const response = await axios.get(`http://qcmbackend.cluster-ig3.igpolytech.fr/api/user/${user._id}`);
           setProfile(response.data);
         } catch (error) {
           console.error("Error fetching user profile:", error);

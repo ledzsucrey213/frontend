@@ -24,7 +24,7 @@ function ChapterDetails() {
   useEffect(() => {
     const fetchQuestions = async () => {
       try {
-        const response = await axios.get(`http://localhost:3000/api/questions?chapter=${chapterId}`);
+        const response = await axios.get(`http://qcmbackend.cluster-ig3.igpolytech.fr/api/questions?chapter=${chapterId}`);
         setQuestions(response.data);
         setLoading(false);
       } catch (error) {
@@ -71,7 +71,7 @@ function ChapterDetails() {
 
   const handleSubmitAdd = async () => {
     try {
-      const response = await axios.post(`${import.meta.env.REACT_APP_BACKEND_URL}/api/questions/create`, {
+      const response = await axios.post(`http://qcmbackend.cluster-ig3.igpolytech.fr/api/questions/create`, {
         ...newQuestion,
         chapitre: chapterId,
       });
@@ -90,7 +90,7 @@ function ChapterDetails() {
 
   const handleSubmitEdit = async () => {
     try {
-      const response = await axios.put(`${import.meta.env.REACT_APP_BACKEND_URL}/api/questions/${currentQuestion._id}`, newQuestion);
+      const response = await axios.put(`http://qcmbackend.cluster-ig3.igpolytech.fr/api/questions/${currentQuestion._id}`, newQuestion);
       setQuestions((prev) =>
         prev.map((question) =>
           question._id === currentQuestion._id ? response.data : question
@@ -110,7 +110,7 @@ function ChapterDetails() {
 
   const handleDelete = async () => {
     try {
-      await axios.delete(`${import.meta.env.REACT_APP_BACKEND_URL}/api/questions/${currentQuestion._id}`);
+      await axios.delete(`http://qcmbackend.cluster-ig3.igpolytech.fr/api/questions/${currentQuestion._id}`);
       setQuestions((prev) =>
         prev.filter((question) => question._id !== currentQuestion._id)
       );

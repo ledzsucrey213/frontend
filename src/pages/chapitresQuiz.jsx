@@ -21,7 +21,7 @@ function ChaptersPageQuiz() {
   useEffect(() => {
     if (user && matiereId) {
       // Effectue une requête Axios pour récupérer les chapitres de la matière sélectionnée depuis votre API
-      axios.get(`${import.meta.env.REACT_APP_BACKEND_URL}/api/chapitre/matiere/${matiereId}`)
+      axios.get(`http://qcmbackend.cluster-ig3.igpolytech.fr/api/chapitre/matiere/${matiereId}`)
         .then(response => {
           setChapters(response.data); // Met à jour l'état avec les chapitres récupérés depuis l'API
         })

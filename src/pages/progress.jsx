@@ -22,11 +22,11 @@ function Progress() {
 
     const fetchScoresAndChapters = async () => {
       try {
-        const response = await axios.get(`${import.meta.env.REACT_APP_BACKEND_URL}/api/score/student/${user._id}`);
+        const response = await axios.get(`http://qcmbackend.cluster-ig3.igpolytech.fr/api/score/student/${user._id}`);
         const fetchedScores = response.data;
 
         const chapterPromises = fetchedScores.map(score => 
-          axios.get(`${import.meta.env.REACT_APP_BACKEND_URL}/api/chapitre/${score.chapitre}`)
+          axios.get(`http://qcmbackend.cluster-ig3.igpolytech.fr/api/chapitre/${score.chapitre}`)
         );
 
         const chapters = await Promise.all(chapterPromises);
