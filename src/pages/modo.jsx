@@ -86,9 +86,9 @@ function Modo() {
           <Typography variant="h4" align="center" gutterBottom>
             Modération
           </Typography>
-          <Button variant="contained" color="primary" onClick={handleClickOpen} sx={{ mt: 2, mb: 2 }}>
+          {/*<Button variant="contained" color="primary" onClick={handleClickOpen} sx={{ mt: 2, mb: 2 }}>
             Soumettre un PDF
-          </Button>
+          </Button> */}
           <Paper elevation={3}>
             <List>
               {matieres.map((matiere) => (
@@ -98,7 +98,14 @@ function Modo() {
                   </ListItem>
                   <Divider component="li" />
                   {matiere.chapters.map((chapter) => (
-                    <ListItem key={chapter._id} alignItems="flex-start" sx={{ pl: 4 }}>
+                    <ListItem
+                    key={chapter._id}
+                    alignItems="flex-start"
+                    button
+                    component={Link}
+                    to={`/chapitre/${chapter._id}`}
+                    sx={{ pl: 4 }}
+                  >
                       <ListItemText primary={chapter.nom} />
                     </ListItem>
                   ))}
