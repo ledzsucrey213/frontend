@@ -24,7 +24,7 @@ function ChapterDetails() {
   useEffect(() => {
     const fetchQuestions = async () => {
       try {
-        const response = await axios.get(`http://qcmbackend.cluster-ig3.igpolytech.fr/api/questions/${chapterId}`);
+        const response = await axios.get(`http://qcmbackend.cluster-ig3.igpolytech.fr/api/questions/${chapitreId}`);
         setQuestions(response.data);
         setLoading(false);
       } catch (error) {
