@@ -3,7 +3,7 @@ import { Typography, Container, Box, Paper, List, ListItem, ListItemText, Divide
 import axios from 'axios';
 import { useAuthContext } from '../hooks/useAuthContext';
 import Navbar from '../components/Navbar'; 
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom';
 
 function Modo() {
   const [matieres, setMatieres] = useState([]);
@@ -14,8 +14,15 @@ function Modo() {
   const [generatedQuestions, setGeneratedQuestions] = useState([]);
 
   const { user } = useAuthContext();
+  const navigate = useNavigate();
 
   useEffect(() => {
+    if (!user) {
+      // Redirigez vers la page de connexion si l'utilisateur n'est pas connecté
+      navigate('/login');
+      return;
+    }
+
     const fetchMatieresAndChapters = async () => {
       try {
         const matieresResponse = await axios.get(`http://qcmbackend.cluster-ig3.igpolytech.fr/api/matiere`);
@@ -37,7 +44,7 @@ function Modo() {
     };
 
     fetchMatieresAndChapters();
-  }, []);
+  }, [user, navigate]);
 
   const handleFileChange = (e) => {
     setPdf(e.target.files[0]);
@@ -100,13 +107,13 @@ function Modo() {
                   <Divider component="li" />
                   {matiere.chapters.map((chapter) => (
                     <ListItem
-                    key={chapter._id}
-                    alignItems="flex-start"
-                    button
-                    component={Link}
-                    to={`/chapitre/${chapter._id}`}
-                    sx={{ pl: 4 }}
-                  >
+                      key={chapter._id}
+                      alignItems="flex-start"
+                      button
+                      component={Link}
+                      to={`/chapitre/${chapter._id}`}
+                      sx={{ pl: 4 }}
+                    >
                       <ListItemText primary={chapter.nom} />
                     </ListItem>
                   ))}

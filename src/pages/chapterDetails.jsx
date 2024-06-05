@@ -1,13 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import { Typography, Container, Box, Paper, List, ListItem, ListItemText, Divider, Button, Modal, TextField, IconButton } from '@mui/material';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import Navbar from '../components/Navbar'; // Assurez-vous que le chemin est correct pour votre projet
+import { useAuthContext } from '../hooks/useAuthContext'; // Importez votre hook d'authentification
 
 function ChapterDetails() {
   const { chapterId } = useParams();  // Récupère l'ID du chapitre à partir de l'URL
+  const navigate = useNavigate(); // Utilisé pour la redirection
+  const { user } = useAuthContext(); // Utilisez le contexte d'authentification
   const [questions, setQuestions] = useState([]);
   const [loading, setLoading] = useState(true);
   const [openAdd, setOpenAdd] = useState(false);
@@ -22,6 +25,12 @@ function ChapterDetails() {
   });
 
   useEffect(() => {
+    if (!user) {
+      // Redirigez vers la page de connexion si l'utilisateur n'est pas connecté
+      navigate('/login');
+      return;
+    }
+
     const fetchQuestions = async () => {
       try {
         const response = await axios.get(`http://qcmbackend.cluster-ig3.igpolytech.fr/api/questions/${chapterId}`);
@@ -34,7 +43,7 @@ function ChapterDetails() {
     };
 
     fetchQuestions();
-  }, [chapterId]);
+  }, [chapterId, user, navigate]);
 
   const handleOpenAdd = () => setOpenAdd(true);
   const handleCloseAdd = () => setOpenAdd(false);
@@ -309,4 +318,3 @@ function ChapterDetails() {
 }
 
 export default ChapterDetails;
-
