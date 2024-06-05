@@ -7,7 +7,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import Navbar from '../components/Navbar'; // Assurez-vous que le chemin est correct pour votre projet
 
 function ChapterDetails() {
-  const { chapterId } = useParams();
+  const { chapterId } = useParams();  // Récupère l'ID du chapitre à partir de l'URL
   const [questions, setQuestions] = useState([]);
   const [loading, setLoading] = useState(true);
   const [openAdd, setOpenAdd] = useState(false);
@@ -24,7 +24,7 @@ function ChapterDetails() {
   useEffect(() => {
     const fetchQuestions = async () => {
       try {
-        const response = await axios.get(`http://qcmbackend.cluster-ig3.igpolytech.fr/api/questions/${chapitreId}`);
+        const response = await axios.get(`http://qcmbackend.cluster-ig3.igpolytech.fr/api/questions/${chapterId}`);
         setQuestions(response.data);
         setLoading(false);
       } catch (error) {
