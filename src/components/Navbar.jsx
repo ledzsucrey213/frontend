@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { AppBar, Toolbar, Typography, Button, Box } from '@mui/material';
+import { AppBar, Toolbar, Typography, Button, Box, IconButton, Drawer, List, ListItem, ListItemText } from '@mui/material';
+import MenuIcon from '@mui/icons-material/Menu';
 import { Link, useNavigate } from 'react-router-dom';
 import { useLogout } from '../hooks/useLogout';
 import { useAuthContext } from '../hooks/useAuthContext';
@@ -13,6 +14,7 @@ const Navbar = () => {
   const [loading, setLoading] = useState(true);
   const { user } = useAuthContext();
   const { profile } = useProfile();
+  const [drawerOpen, setDrawerOpen] = useState(false);
 
   console.log('Initial isAdmin:', isAdmin);
   console.log('Initial loading:', loading);
@@ -34,41 +36,77 @@ const Navbar = () => {
     logout();
   };
 
-  return (
-    <AppBar position="sticky" sx={{ width: '107%', margin: 0, marginTop: -5, marginLeft: -5, marginRight: 0, bgcolor: '#fff', color: '#333', zIndex: 1000 }}>
-      <Toolbar sx={{ justifyContent: 'space-between' }}>
-        <Typography variant="h6" component="div">
-          <Box sx={{ display: 'flex', alignItems: 'center' }}>
-            <Link to="/" style={{ textDecoration: 'none', color: 'inherit' }}>
-              <img src={logo} alt="Logo" style={{ height: '60px', marginRight: '16px' }} /> {/* Logo plus grand */}
-            </Link>
-            <Link to="/" style={{ textDecoration: 'none', color: 'inherit' }}>
-              <Button color="inherit" sx={{ mr: 2 }}>Accueil</Button>
-            </Link>
-            {user ? (
-              <>
-                <Link to="/matieres-quiz" style={{ textDecoration: 'none', color: 'inherit' }}>
-                  <Button color="inherit" sx={{ mr: 2 }}>Quiz</Button>
-                </Link>
-                <Link to="/matieres-cours" style={{ textDecoration: 'none', color: 'inherit' }}>
-                  <Button color="inherit" sx={{ mr: 2 }}>Cours</Button>
-                </Link>
-              </>
-            ) : (
-              <>
-                <Link to="/login" style={{ textDecoration: 'none', color: 'inherit' }}>
-                  <Button color="inherit">Quiz</Button>
-                </Link>
-                <Link to="/login" style={{ textDecoration: 'none', color: 'inherit' }}>
-                  <Button color="inherit">Cours</Button>
-                </Link>
-              </>
+  const toggleDrawer = (open) => (event) => {
+    if (event.type === 'keydown' && (event.key === 'Tab' || event.key === 'Shift')) {
+      return;
+    }
+    setDrawerOpen(open);
+  };
+
+  const drawerList = (
+    <Box
+      sx={{ width: 250 }}
+      role="presentation"
+      onClick={toggleDrawer(false)}
+      onKeyDown={toggleDrawer(false)}
+    >
+      <List>
+        <ListItem button component={Link} to="/">
+          <ListItemText primary="Accueil" />
+        </ListItem>
+        {user ? (
+          <>
+            <ListItem button component={Link} to="/matieres-quiz">
+              <ListItemText primary="Quiz" />
+            </ListItem>
+            <ListItem button component={Link} to="/matieres-cours">
+              <ListItemText primary="Cours" />
+            </ListItem>
+            {profile && isAdmin && (
+              <ListItem button component={Link} to="/modo">
+                <ListItemText primary="Administrateur" />
+              </ListItem>
             )}
-          </Box>
+            {profile && (
+              <ListItem button component={Link} to="/settings">
+                <ListItemText primary={profile.prenom} />
+              </ListItem>
+            )}
+            <ListItem button onClick={handleClick}>
+              <ListItemText primary="Déconnexion" />
+            </ListItem>
+          </>
+        ) : (
+          <>
+            <ListItem button component={Link} to="/login">
+              <ListItemText primary="Connexion" />
+            </ListItem>
+          </>
+        )}
+      </List>
+    </Box>
+  );
+
+  return (
+    <AppBar position="sticky" sx={{ bgcolor: '#fff', color: '#333', zIndex: 1000 }}>
+      <Toolbar sx={{ justifyContent: 'space-between' }}>
+        <Typography variant="h6" component="div" sx={{ display: 'flex', alignItems: 'center' }}>
+          <Link to="/" style={{ textDecoration: 'none', color: 'inherit' }}>
+            <img src={logo} alt="Logo" style={{ height: '60px', marginRight: '16px' }} /> {/* Logo plus grand */}
+          </Link>
         </Typography>
-        <Box sx={{ display: 'flex', alignItems: 'center' }}>
+        <Box sx={{ display: { xs: 'none', md: 'flex' }, alignItems: 'center' }}>
+          <Link to="/" style={{ textDecoration: 'none', color: 'inherit' }}>
+            <Button color="inherit" sx={{ mr: 2 }}>Accueil</Button>
+          </Link>
           {user ? (
             <>
+              <Link to="/matieres-quiz" style={{ textDecoration: 'none', color: 'inherit' }}>
+                <Button color="inherit" sx={{ mr: 2 }}>Quiz</Button>
+              </Link>
+              <Link to="/matieres-cours" style={{ textDecoration: 'none', color: 'inherit' }}>
+                <Button color="inherit" sx={{ mr: 2 }}>Cours</Button>
+              </Link>
               {profile && isAdmin && (
                 <Button
                   color="inherit"
@@ -93,11 +131,25 @@ const Navbar = () => {
             </Link>
           )}
         </Box>
+        <IconButton
+          color="inherit"
+          aria-label="menu"
+          edge="end"
+          onClick={toggleDrawer(true)}
+          sx={{ display: { xs: 'block', md: 'none' } }}
+        >
+          <MenuIcon />
+        </IconButton>
+        <Drawer
+          anchor="right"
+          open={drawerOpen}
+          onClose={toggleDrawer(false)}
+        >
+          {drawerList}
+        </Drawer>
       </Toolbar>
     </AppBar>
   );
 };
 
 export default Navbar;
-
-
