@@ -2,55 +2,31 @@ import React, { useState, useEffect } from 'react';
 import { Typography, Button, Container, Box, LinearProgress } from '@mui/material';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
-import banner from '../images/qcmpassbanner.png'; // Import de l'image du banner
+import banner from '../images/qcmpassbanner.png';
 import { useAuthContext } from '../hooks/useAuthContext';
 
 function Quiz() {
-  const [questions, setQuestions] = useState([]);
+  const [quiz, setQuiz] = useState(null);
   const [loading, setLoading] = useState(true);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [selectedAnswerIndex, setSelectedAnswerIndex] = useState(null);
   const [answered, setAnswered] = useState(false);
-  const [usedQuestions, setUsedQuestions] = useState(new Set());
   const [correctAnswers, setCorrectAnswers] = useState(0);
   const { user } = useAuthContext();
   const chapitreId = new URLSearchParams(window.location.search).get('chapitre');
 
   useEffect(() => {
-    const getRandomQuestionFromChapter = async (chapitreId) => {
+    const fetchRandomQuiz = async (chapitreId) => {
       try {
-        const response = await axios.get(`https://qcmbackend.onrender.com/api/questions/random/${chapitreId}`);
-        const question = response.data;
-
-        if (usedQuestions.has(question._id)) {
-          return getRandomQuestionFromChapter(chapitreId);
-        }
-
-        return question;
+        const response = await axios.get(`https://qcmbackend.onrender.com/api/quiz/${chapitreId}`);
+        setQuiz(response.data);
+        setLoading(false);
       } catch (error) {
-        console.error('Erreur lors de la récupération de la question aléatoire :', error);
-        return null;
+        console.error('Erreur lors de la récupération du quiz aléatoire :', error);
       }
     };
 
-    const getUniqueQuestions = async () => {
-      const uniqueQuestions = [];
-      const usedQuestionIds = new Set();
-
-      while (uniqueQuestions.length < 10) {
-        const question = await getRandomQuestionFromChapter(chapitreId);
-        if (question && !usedQuestionIds.has(question._id)) {
-          uniqueQuestions.push(question);
-          usedQuestionIds.add(question._id);
-        }
-      }
-
-      setQuestions(uniqueQuestions);
-      setUsedQuestions(usedQuestionIds);
-      setLoading(false);
-    };
-
-    getUniqueQuestions();
+    fetchRandomQuiz(chapitreId);
   }, [chapitreId]);
 
   const handleAnswerSelection = (index) => {
@@ -66,17 +42,17 @@ function Quiz() {
   };
 
   const handleCheckAnswer = () => {
-    if (selectedAnswerIndex === questions[currentQuestionIndex].answer.charCodeAt(0) - 65) {
+    if (selectedAnswerIndex === quiz.questions[currentQuestionIndex].answer.charCodeAt(0) - 65) {
       setCorrectAnswers(prevCorrectAnswers => prevCorrectAnswers + 1);
     }
     setAnswered(true);
   };
 
   const postScore = async () => {
-    if (questions.length > 0 && user) {
+    if (quiz && user) {
       const scoreData = {
         score: correctAnswers,
-        quiz: questions.map(q => q._id),
+        quiz: quiz.questions.map(q => q._id),
         date: new Date(),
         student: user._id,
         chapitre: chapitreId
@@ -91,13 +67,13 @@ function Quiz() {
   };
 
   useEffect(() => {
-    if (!loading && currentQuestionIndex === questions.length) {
+    if (!loading && currentQuestionIndex === (quiz ? quiz.questions.length : 0)) {
       postScore();
     }
   }, [loading, currentQuestionIndex]);
 
   const getAnswerLetter = (index) => {
-    return String.fromCharCode(65 + index); // Convertir l'index en lettre (A, B, C, D...)
+    return String.fromCharCode(65 + index);
   };
 
   return (
@@ -106,24 +82,24 @@ function Quiz() {
         <img src={banner} alt="QCM PASS Banner" style={{ width: '50%', maxWidth: '300px' }} />
       </Box>
 
-      {currentQuestionIndex < 10 && (
+      {currentQuestionIndex < (quiz ? quiz.questions.length : 0) && (
         <React.Fragment>
           <Typography variant="h6" align="center" gutterBottom>
-            {currentQuestionIndex + 1}/{questions.length}
+            {currentQuestionIndex + 1}/{quiz ? quiz.questions.length : 0}
           </Typography>
           <Box sx={{ width: '100%', mb: 4 }}>
-            <LinearProgress variant="determinate" value={(questions.length > 0) ? (((currentQuestionIndex + 1) / questions.length) * 100) : 0} />
+            <LinearProgress variant="determinate" value={(quiz ? (((currentQuestionIndex + 1) / quiz.questions.length) * 100) : 0)} />
           </Box>
         </React.Fragment>
       )}
 
-      {!loading && currentQuestionIndex < questions.length && (
+      {!loading && quiz && currentQuestionIndex < quiz.questions.length && (
         <Box>
           <Typography variant="h5" align="center" gutterBottom>
-            {questions[currentQuestionIndex].text}
+            {quiz.questions[currentQuestionIndex].text}
           </Typography>
           <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-            {questions[currentQuestionIndex].options.map((option, index) => (
+            {quiz.questions[currentQuestionIndex].options.map((option, index) => (
               <Button
                 key={index}
                 variant="outlined"
@@ -131,12 +107,12 @@ function Quiz() {
                   mt: 1,
                   width: '70%',
                   borderRadius: '10px',
-                  bgcolor: (answered && index === questions[currentQuestionIndex].answer.charCodeAt(0) - 65) ? '#a5d6a7' : 
+                  bgcolor: (answered && index === quiz.questions[currentQuestionIndex].answer.charCodeAt(0) - 65) ? '#a5d6a7' : 
                            (answered && index === selectedAnswerIndex) ? '#ef9a9a' :
                            (selectedAnswerIndex === index ? 'grey' : 'white'),
                   color: 'black',
                   '&:hover': {
-                    bgcolor: (answered && index === questions[currentQuestionIndex].answer.charCodeAt(0) - 65) ? '#a5d6a7' : 
+                    bgcolor: (answered && index === quiz.questions[currentQuestionIndex].answer.charCodeAt(0) - 65) ? '#a5d6a7' : 
                              (answered && index === selectedAnswerIndex) ? '#ef9a9a' :
                              (selectedAnswerIndex === index ? 'grey' : (answered ? 'grey' : 'white')),
                   }
@@ -157,7 +133,7 @@ function Quiz() {
           {answered && (
             <Box sx={{ mt: 2 }}>
               <Typography variant="body1" align="center">
-                Correction : {questions[currentQuestionIndex].correction}
+                Correction : {quiz.questions[currentQuestionIndex].correction}
               </Typography>
             </Box>
           )}
@@ -170,14 +146,14 @@ function Quiz() {
           )}
         </Box>
       )}
-      {!loading && currentQuestionIndex === questions.length && (
+      {!loading && currentQuestionIndex === (quiz ? quiz.questions.length : 0) && (
         <Box sx={{ mt: 4 }}>
           <Typography variant="h5" align="center" gutterBottom>
             Fin du quiz !
           </Typography>
           <Box sx={{ marginTop: 6, p: 2, bgcolor: 'white', border: 1, borderColor: '#3f51b5', borderRadius: 5, width: 'fit-content', margin: '0 auto', textAlign: 'center' }}>
             <Typography variant="body1" align="center" gutterBottom style={{ color: '#00796b', fontSize: 20 }}>
-              Tu as obtenu une note de {correctAnswers}/10.
+              Tu as obtenu une note de {correctAnswers}/{quiz ? quiz.questions.length : 0}.
             </Typography>
           </Box>
           <Box sx={{ mt: 4, textAlign: 'center' }}>
@@ -209,19 +185,3 @@ function Quiz() {
 }
 
 export default Quiz;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

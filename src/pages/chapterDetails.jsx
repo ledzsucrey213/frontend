@@ -4,136 +4,171 @@ import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
-import Navbar from '../components/Navbar'; // Assurez-vous que le chemin est correct pour votre projet
-import { useAuthContext } from '../hooks/useAuthContext'; // Importez votre hook d'authentification
+import Navbar from '../components/Navbar';
+import { useAuthContext } from '../hooks/useAuthContext';
 
 function ChapterDetails() {
-  const { chapterId } = useParams();  // Récupère l'ID du chapitre à partir de l'URL
-  const navigate = useNavigate(); // Utilisé pour la redirection
-  const { user } = useAuthContext(); // Utilisez le contexte d'authentification
-  const [questions, setQuestions] = useState([]);
+  const { chapterId } = useParams();
+  const navigate = useNavigate();
+  const { user } = useAuthContext();
+  const [quizzes, setQuizzes] = useState([]);
   const [loading, setLoading] = useState(true);
   const [openAdd, setOpenAdd] = useState(false);
   const [openEdit, setOpenEdit] = useState(false);
   const [openDelete, setOpenDelete] = useState(false);
-  const [currentQuestion, setCurrentQuestion] = useState(null);
-  const [newQuestion, setNewQuestion] = useState({
-    text: '',
-    options: ['', '', '', ''],
-    answer: '',
-    correction: '',
+  const [currentQuiz, setCurrentQuiz] = useState(null);
+  const [newQuiz, setNewQuiz] = useState({
+    nom: '',
+    questions: Array(10).fill({
+      text: '',
+      options: ['', '', '', ''],
+      answer: '',
+      correction: '',
+    }),
   });
 
   useEffect(() => {
     if (!user) {
-      // Redirigez vers la page de connexion si l'utilisateur n'est pas connecté
       navigate('/login');
       return;
     }
 
-    const fetchQuestions = async () => {
+    const fetchQuizzes = async () => {
       try {
-        const response = await axios.get(`https://qcmbackend.onrender.com/api/questions/${chapterId}`);
-        setQuestions(response.data);
+        const response = await axios.get(`https://qcmbackend.onrender.com/api/quiz/chapitre/${chapterId}`);
+        setQuizzes(response.data);
         setLoading(false);
       } catch (error) {
-        console.error('Erreur lors de la récupération des questions :', error);
+        console.error('Erreur lors de la récupération des quiz :', error);
         setLoading(false);
       }
     };
 
-    fetchQuestions();
+    fetchQuizzes();
   }, [chapterId, user, navigate]);
 
   const handleOpenAdd = () => setOpenAdd(true);
   const handleCloseAdd = () => setOpenAdd(false);
 
-  const handleOpenEdit = (question) => {
-    setCurrentQuestion(question);
-    setNewQuestion(question);
+  const handleOpenEdit = (quiz) => {
+    setCurrentQuiz(quiz);
+    setNewQuiz(quiz);
     setOpenEdit(true);
   };
   const handleCloseEdit = () => setOpenEdit(false);
 
-  const handleOpenDelete = (question) => {
-    setCurrentQuestion(question);
+  const handleOpenDelete = (quiz) => {
+    setCurrentQuiz(quiz);
     setOpenDelete(true);
   };
   const handleCloseDelete = () => setOpenDelete(false);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setNewQuestion((prev) => ({
+    setNewQuiz((prev) => ({
       ...prev,
       [name]: value,
     }));
   };
 
-  const handleOptionChange = (index, value) => {
-    const newOptions = [...newQuestion.options];
-    newOptions[index] = value;
-    setNewQuestion((prev) => ({
+  const handleQuestionChange = (index, key, value) => {
+    const newQuestions = [...newQuiz.questions];
+    newQuestions[index][key] = value;
+    setNewQuiz((prev) => ({
       ...prev,
-      options: newOptions,
+      questions: newQuestions,
+    }));
+  };
+
+  const handleOptionChange = (questionIndex, optionIndex, value) => {
+    const newQuestions = [...newQuiz.questions];
+    newQuestions[questionIndex].options[optionIndex] = value;
+    setNewQuiz((prev) => ({
+      ...prev,
+      questions: newQuestions,
     }));
   };
 
   const handleSubmitAdd = async () => {
     try {
-      const response = await axios.post(`https://qcmbackend.onrender.com/api/questions/create`, {
-        ...newQuestion,
+      // Create the questions first
+      const questions = await Promise.all(newQuiz.questions.map(async (question) => {
+        const response = await axios.post('https://qcmbackend.onrender.com/api/questions/create', {
+          ...question,
+          chapitre: chapterId,
+        });
+        return response.data._id;
+      }));
+
+      // Create the quiz with the questions' IDs
+      const quizData = {
+        nom: newQuiz.nom,
+        questions,
         chapitre: chapterId,
-      });
-      setQuestions((prev) => [...prev, response.data]);
-      setNewQuestion({
-        text: '',
-        options: ['', '', '', ''],
-        answer: '',
-        correction: '',
+        nombreQuestions: 10,
+      };
+
+      const response = await axios.post('https://qcmbackend.onrender.com/api/quiz/create', quizData);
+      setQuizzes((prev) => [...prev, response.data]);
+
+      // Reset the form
+      setNewQuiz({
+        nom: '',
+        questions: Array(10).fill({
+          text: '',
+          options: ['', '', '', ''],
+          answer: '',
+          correction: '',
+        }),
       });
       handleCloseAdd();
     } catch (error) {
-      console.error('Erreur lors de l\'ajout de la question :', error);
+      console.error('Erreur lors de l\'ajout du quiz :', error);
     }
   };
 
   const handleSubmitEdit = async () => {
     try {
-      const response = await axios.put(`https://qcmbackend.onrender.com//api/questions/${currentQuestion._id}`, newQuestion);
-      setQuestions((prev) =>
-        prev.map((question) =>
-          question._id === currentQuestion._id ? response.data : question
+      const response = await axios.put(`https://qcmbackend.onrender.com/api/quiz/${currentQuiz._id}`, newQuiz);
+      setQuizzes((prev) =>
+        prev.map((quiz) =>
+          quiz._id === currentQuiz._id ? response.data : quiz
         )
       );
-      setNewQuestion({
-        text: '',
-        options: ['', '', '', ''],
-        answer: '',
-        correction: '',
+      setNewQuiz({
+        nom: '',
+        questions: Array(10).fill({
+          text: '',
+          options: ['', '', '', ''],
+          answer: '',
+          correction: '',
+        }),
       });
       handleCloseEdit();
     } catch (error) {
-      console.error('Erreur lors de la modification de la question :', error);
+      console.error('Erreur lors de la modification du quiz :', error);
     }
   };
 
   const handleDelete = async () => {
     try {
-      await axios.delete(`https://qcmbackend.onrender.com/api/questions/${currentQuestion._id}`);
-      setQuestions((prev) =>
-        prev.filter((question) => question._id !== currentQuestion._id)
+      await axios.delete(`https://qcmbackend.onrender.com/api/quiz/${currentQuiz._id}`);
+      setQuizzes((prev) =>
+        prev.filter((quiz) => quiz._id !== currentQuiz._id)
       );
       handleCloseDelete();
     } catch (error) {
-      console.error('Erreur lors de la suppression de la question :', error);
+      console.error('Erreur lors de la suppression du quiz :', error);
     }
   };
+
+  const optionLabel = (index) => String.fromCharCode(65 + index);
 
   if (loading) {
     return (
       <Container maxWidth="md">
         <Typography variant="body1" align="center">
-          Chargement des questions...
+          Chargement des quiz...
         </Typography>
       </Container>
     );
@@ -146,7 +181,7 @@ function ChapterDetails() {
         <Box sx={{ mt: 4, mb: 4 }}>
           <Box display="flex" justifyContent="space-between" alignItems="center">
             <Typography variant="h4" align="center" gutterBottom>
-              Questions du Chapitre
+              Quiz du Chapitre
             </Typography>
             <Button variant="contained" color="primary" onClick={handleOpenAdd}>
               Ajouter
@@ -154,37 +189,31 @@ function ChapterDetails() {
           </Box>
           <Paper elevation={3}>
             <List>
-              {questions.map((question, index) => (
-                <React.Fragment key={question._id}>
+              {quizzes.map((quiz, index) => (
+                <React.Fragment key={quiz._id}>
                   <ListItem alignItems="flex-start">
                     <ListItemText
-                      primary={<Typography variant="h6">{`Question ${index + 1}: ${question.text}`}</Typography>}
+                      primary={<Typography variant="h6">{`Quiz ${index + 1}: ${quiz.nom}`}</Typography>}
                       secondary={
                         <Box component="span">
                           <ul>
-                            {question.options.map((option, i) => (
+                            {quiz.questions.map((question, i) => (
                               <li key={i} style={{ marginBottom: '8px' }}>
-                                {option}
+                                {question.text}
                               </li>
                             ))}
                           </ul>
-                          <Typography variant="body2" color="textSecondary">
-                            <strong>Réponse :</strong> {String.fromCharCode(65 + question.answer.charCodeAt(0) - 65)}
-                          </Typography>
-                          <Typography variant="body2" color="textSecondary">
-                            <strong>Correction :</strong> {question.correction}
-                          </Typography>
                         </Box>
                       }
                     />
-                    <IconButton onClick={() => handleOpenEdit(question)}>
+                    <IconButton onClick={() => handleOpenEdit(quiz)}>
                       <EditIcon />
                     </IconButton>
-                    <IconButton onClick={() => handleOpenDelete(question)}>
+                    <IconButton onClick={() => handleOpenDelete(quiz)}>
                       <DeleteIcon />
                     </IconButton>
                   </ListItem>
-                  {index < questions.length - 1 && <Divider component="li" />}
+                  {index < quizzes.length - 1 && <Divider component="li" />}
                 </React.Fragment>
               ))}
             </List>
@@ -192,46 +221,59 @@ function ChapterDetails() {
         </Box>
       </Container>
 
-      {/* Modal for Adding a Question */}
+      {/* Modal for Adding a Quiz */}
       <Modal open={openAdd} onClose={handleCloseAdd}>
-        <Box sx={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', width: 300, height: 500, overflowY: 'auto', bgcolor: 'background.paper', p: 4, boxShadow: 24 }}>
+        <Box sx={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', width: 500, height: '80vh', overflowY: 'auto', bgcolor: 'background.paper', p: 4, boxShadow: 24 }}>
           <Typography variant="h6" gutterBottom>
-            Ajouter une question
+            Ajouter un quiz
           </Typography>
           <TextField
-            label="Texte de la question"
-            name="text"
-            value={newQuestion.text}
+            label="Nom du quiz"
+            name="nom"
+            value={newQuiz.nom}
             onChange={handleChange}
             fullWidth
             margin="normal"
           />
-          {newQuestion.options.map((option, index) => (
-            <TextField
-              key={index}
-              label={`Option ${index + 1}`}
-              value={option}
-              onChange={(e) => handleOptionChange(index, e.target.value)}
-              fullWidth
-              margin="normal"
-            />
+          {newQuiz.questions.map((question, qIndex) => (
+            <Box key={qIndex} sx={{ mb: 2 }}>
+              <Typography variant="subtitle1">{`Question ${qIndex + 1}`}</Typography>
+              <TextField
+                label="Texte de la question"
+                name="text"
+                value={question.text}
+                onChange={(e) => handleQuestionChange(qIndex, 'text', e.target.value)}
+                fullWidth
+                margin="normal"
+              />
+              {question.options.map((option, oIndex) => (
+                <TextField
+                  key={oIndex}
+                  label={`Option ${optionLabel(oIndex)}`}
+                  value={option}
+                  onChange={(e) => handleOptionChange(qIndex, oIndex, e.target.value)}
+                  fullWidth
+                  margin="normal"
+                />
+              ))}
+              <TextField
+                label="Réponse (A, B, C, D)"
+                name="answer"
+                value={question.answer}
+                onChange={(e) => handleQuestionChange(qIndex, 'answer', e.target.value)}
+                fullWidth
+                margin="normal"
+              />
+              <TextField
+                label="Correction"
+                name="correction"
+                value={question.correction}
+                onChange={(e) => handleQuestionChange(qIndex, 'correction', e.target.value)}
+                fullWidth
+                margin="normal"
+              />
+            </Box>
           ))}
-          <TextField
-            label="Réponse"
-            name="answer"
-            value={newQuestion.answer}
-            onChange={handleChange}
-            fullWidth
-            margin="normal"
-          />
-          <TextField
-            label="Correction"
-            name="correction"
-            value={newQuestion.correction}
-            onChange={handleChange}
-            fullWidth
-            margin="normal"
-          />
           <Box mt={2} display="flex" justifyContent="space-between">
             <Button variant="contained" color="primary" onClick={handleSubmitAdd}>
               Ajouter
@@ -243,46 +285,59 @@ function ChapterDetails() {
         </Box>
       </Modal>
 
-      {/* Modal for Editing a Question */}
+      {/* Modal for Editing a Quiz */}
       <Modal open={openEdit} onClose={handleCloseEdit}>
-        <Box sx={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', width: 300, height: 500, overflowY: 'auto', bgcolor: 'background.paper', p: 4, boxShadow: 24 }}>
+        <Box sx={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', width: 500, height: '80vh', overflowY: 'auto', bgcolor: 'background.paper', p: 4, boxShadow: 24 }}>
           <Typography variant="h6" gutterBottom>
-            Modifier la question
+            Modifier le quiz
           </Typography>
           <TextField
-            label="Texte de la question"
-            name="text"
-            value={newQuestion.text}
+            label="Nom du quiz"
+            name="nom"
+            value={newQuiz.nom}
             onChange={handleChange}
             fullWidth
             margin="normal"
           />
-          {newQuestion.options.map((option, index) => (
-            <TextField
-              key={index}
-              label={`Option ${index + 1}`}
-              value={option}
-              onChange={(e) => handleOptionChange(index, e.target.value)}
-              fullWidth
-              margin="normal"
-            />
+          {newQuiz.questions.map((question, qIndex) => (
+            <Box key={qIndex} sx={{ mb: 2 }}>
+              <Typography variant="subtitle1">{`Question ${qIndex + 1}`}</Typography>
+              <TextField
+                label="Texte de la question"
+                name="text"
+                value={question.text}
+                onChange={(e) => handleQuestionChange(qIndex, 'text', e.target.value)}
+                fullWidth
+                margin="normal"
+              />
+              {question.options.map((option, oIndex) => (
+                <TextField
+                  key={oIndex}
+                  label={`Option ${optionLabel(oIndex)}`}
+                  value={option}
+                  onChange={(e) => handleOptionChange(qIndex, oIndex, e.target.value)}
+                  fullWidth
+                  margin="normal"
+                />
+              ))}
+              <TextField
+                label="Réponse (A, B, C, D)"
+                name="answer"
+                value={question.answer}
+                onChange={(e) => handleQuestionChange(qIndex, 'answer', e.target.value)}
+                fullWidth
+                margin="normal"
+              />
+              <TextField
+                label="Correction"
+                name="correction"
+                value={question.correction}
+                onChange={(e) => handleQuestionChange(qIndex, 'correction', e.target.value)}
+                fullWidth
+                margin="normal"
+              />
+            </Box>
           ))}
-          <TextField
-            label="Réponse"
-            name="answer"
-            value={newQuestion.answer}
-            onChange={handleChange}
-            fullWidth
-            margin="normal"
-          />
-          <TextField
-            label="Correction"
-            name="correction"
-            value={newQuestion.correction}
-            onChange={handleChange}
-            fullWidth
-            margin="normal"
-          />
           <Box mt={2} display="flex" justifyContent="space-between">
             <Button variant="contained" color="primary" onClick={handleSubmitEdit}>
               Modifier
@@ -294,14 +349,14 @@ function ChapterDetails() {
         </Box>
       </Modal>
 
-      {/* Modal for Deleting a Question */}
+      {/* Modal for Deleting a Quiz */}
       <Modal open={openDelete} onClose={handleCloseDelete}>
         <Box sx={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', width: 300, bgcolor: 'background.paper', p: 4, boxShadow: 24 }}>
           <Typography variant="h6" gutterBottom>
-            Supprimer la question
+            Supprimer le quiz
           </Typography>
           <Typography variant="body1" gutterBottom>
-            Êtes-vous sûr de vouloir supprimer cette question ?
+            Êtes-vous sûr de vouloir supprimer ce quiz ?
           </Typography>
           <Box mt={2} display="flex" justifyContent="space-between">
             <Button variant="contained" color="secondary" onClick={handleDelete}>

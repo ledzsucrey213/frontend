@@ -13,7 +13,7 @@ export const useSignup = () => {
     setError(null);
 
     try {
-      const response = await axios.post(`http://qcmbackend.cluster-ig3.igpolytech.fr/api/user/signup`, { username, email, password, nom, prenom, numero, adresse });
+      const response = await axios.post(`https://qcmbackend.onrender.com/api/user/signup`, { username, email, password, nom, prenom, numero, adresse });
 
       // No need to parse JSON manually, axios does it for you
       const data = response.data;

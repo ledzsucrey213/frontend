@@ -59,9 +59,6 @@ const Navbar = () => {
             <ListItem button component={Link} to="/matieres-quiz">
               <ListItemText primary="Quiz" />
             </ListItem>
-            <ListItem button component={Link} to="/matieres-cours">
-              <ListItemText primary="Cours" />
-            </ListItem>
             {profile && isAdmin && (
               <ListItem button component={Link} to="/modo">
                 <ListItemText primary="Administrateur" />
@@ -104,16 +101,13 @@ const Navbar = () => {
               <Link to="/matieres-quiz" style={{ textDecoration: 'none', color: 'inherit' }}>
                 <Button color="inherit" sx={{ mr: 2 }}>Quiz</Button>
               </Link>
-              <Link to="/matieres-cours" style={{ textDecoration: 'none', color: 'inherit' }}>
-                <Button color="inherit" sx={{ mr: 2 }}>Cours</Button>
-              </Link>
               {profile && isAdmin && (
                 <Button
                   color="inherit"
                   sx={{ mr: 2 }}
                   onClick={() => navigate('/modo')}
                 >
-                  Administrateur
+                  Modo
                 </Button>
               )}
               {profile && (
