@@ -40,7 +40,7 @@ function ChaptersPageCours() {
 
   useEffect(() => {
     if (user && matiereId) {
-      axios.get(`http://qcmbackend.cluster-ig3.igpolytech.fr/api/chapitre/matiere/${matiereId}`)
+      axios.get(`https://qcmbackend.onrender.com/api/chapitre/matiere/${matiereId}`)
         .then(response => {
           setChapters(response.data);
         })

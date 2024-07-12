@@ -19,7 +19,7 @@ function Quiz() {
   useEffect(() => {
     const getRandomQuestionFromChapter = async (chapitreId) => {
       try {
-        const response = await axios.get(`http://qcmbackend.cluster-ig3.igpolytech.fr/api/questions/random/${chapitreId}`);
+        const response = await axios.get(`https://qcmbackend.onrender.com/api/questions/random/${chapitreId}`);
         const question = response.data;
 
         if (usedQuestions.has(question._id)) {
@@ -82,7 +82,7 @@ function Quiz() {
         chapitre: chapitreId
       };
       try {
-        await axios.post(`http://qcmbackend.cluster-ig3.igpolytech.fr/api/score/create`, scoreData);
+        await axios.post(`https://qcmbackend.onrender.com/api/score/create`, scoreData);
         console.log("Score enregistré");
       } catch (error) {
         console.error('Erreur lors de la soumission du score :', error);

@@ -25,9 +25,9 @@ function Modo() {
 
     const fetchMatieresAndChapters = async () => {
       try {
-        const matieresResponse = await axios.get(`http://qcmbackend.cluster-ig3.igpolytech.fr/api/matiere`);
+        const matieresResponse = await axios.get(`https://qcmbackend.onrender.com/api/matiere`);
         const matieresData = matieresResponse.data;
-        const chaptersResponse = await axios.get(`http://qcmbackend.cluster-ig3.igpolytech.fr/api/chapitre`);
+        const chaptersResponse = await axios.get(`https://qcmbackend.onrender.com/api/chapitre`);
         const chaptersData = chaptersResponse.data;
 
         const matieresWithChapters = matieresData.map(matiere => ({
@@ -60,7 +60,7 @@ function Modo() {
     formData.append('chapterId', selectedChapter);
 
     try {
-      const response = await axios.post(`http://qcmbackend.cluster-ig3.igpolytech.fr/api/questions/upload-pdf`, formData);
+      const response = await axios.post(`https://qcmbackend.onrender.com/api/questions/upload-pdf`, formData);
       setGeneratedQuestions(response.data.questions);
       setOpen(false);
     } catch (error) {

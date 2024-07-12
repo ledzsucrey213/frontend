@@ -33,7 +33,7 @@ function ChapterDetails() {
 
     const fetchQuestions = async () => {
       try {
-        const response = await axios.get(`http://qcmbackend.cluster-ig3.igpolytech.fr/api/questions/${chapterId}`);
+        const response = await axios.get(`https://qcmbackend.onrender.com/api/questions/${chapterId}`);
         setQuestions(response.data);
         setLoading(false);
       } catch (error) {
@@ -80,7 +80,7 @@ function ChapterDetails() {
 
   const handleSubmitAdd = async () => {
     try {
-      const response = await axios.post(`http://qcmbackend.cluster-ig3.igpolytech.fr/api/questions/create`, {
+      const response = await axios.post(`https://qcmbackend.onrender.com/api/questions/create`, {
         ...newQuestion,
         chapitre: chapterId,
       });
@@ -99,7 +99,7 @@ function ChapterDetails() {
 
   const handleSubmitEdit = async () => {
     try {
-      const response = await axios.put(`http://qcmbackend.cluster-ig3.igpolytech.fr/api/questions/${currentQuestion._id}`, newQuestion);
+      const response = await axios.put(`https://qcmbackend.onrender.com//api/questions/${currentQuestion._id}`, newQuestion);
       setQuestions((prev) =>
         prev.map((question) =>
           question._id === currentQuestion._id ? response.data : question
@@ -119,7 +119,7 @@ function ChapterDetails() {
 
   const handleDelete = async () => {
     try {
-      await axios.delete(`http://qcmbackend.cluster-ig3.igpolytech.fr/api/questions/${currentQuestion._id}`);
+      await axios.delete(`https://qcmbackend.onrender.com/api/questions/${currentQuestion._id}`);
       setQuestions((prev) =>
         prev.filter((question) => question._id !== currentQuestion._id)
       );

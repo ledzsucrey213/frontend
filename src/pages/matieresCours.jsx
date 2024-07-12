@@ -20,7 +20,7 @@ function MatieresPageCours() {
   useEffect(() => {
     if (user) {
       // Effectue une requête Axios pour récupérer les matières depuis votre API
-      axios.get(`http://qcmbackend.cluster-ig3.igpolytech.fr/api/matiere/`)
+      axios.get(`https://qcmbackend.onrender.com/api/matiere/`)
         .then(response => {
           // Trie les matières selon leur nom
           const sortedMatieres = response.data.sort((a, b) => {
