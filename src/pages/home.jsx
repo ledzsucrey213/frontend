@@ -1,9 +1,10 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import { Typography, Button, Container, Box, Grid, Toolbar } from '@mui/material';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import Navbar from "../components/Navbar";
 import { AuthContext } from "../context/AuthContext";
 import './home.css';  // Import the CSS file
+import image1 from '../images/image1.png'; // Adjust the path as needed
 
 // Fonction pour le cas où l'utilisateur est connecté
 function HomeLoggedIn() {
@@ -112,19 +113,36 @@ function HomeLoggedOut() {
 
 function Home() {
   const { user } = useContext(AuthContext);
+  const navigate = useNavigate();
+  const [loading, setLoading] = useState(true);
 
-  console.log('Rendering Home with user:', user);
-  
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setLoading(false);
+      if (!user) {
+        navigate('/login');
+      }
+    }, 3000); // 3 seconds
+
+    return () => clearTimeout(timer);
+  }, [user, navigate]);
+
   return (
     <Box className="flex-grow">
-      <Navbar />
-      <Toolbar />
-      {user ? <HomeLoggedIn /> : <HomeLoggedOut />}
-      <Box className="footer">
-        <Typography variant="body2" className="text-secondary">
-          © QCM PASS {new Date().getFullYear()}
-        </Typography>
-      </Box>
+      {loading ? (
+        <Box className="fade-in" style={{ backgroundImage: `url(${image1})`, backgroundSize: 'cover', height: '100vh', width: '100vw' }}></Box>
+      ) : (
+        <>
+          <Navbar />
+          <Toolbar />
+          {user ? <HomeLoggedIn /> : <HomeLoggedOut />}
+          <Box className="footer">
+            <Typography variant="body2" className="text-secondary">
+              © QCM PASS {new Date().getFullYear()}
+            </Typography>
+          </Box>
+        </>
+      )}
     </Box>
   );
 }
