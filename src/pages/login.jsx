@@ -9,7 +9,6 @@ import Checkbox from '@mui/material/Checkbox';
 import Link from '@mui/material/Link';
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
-import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
@@ -17,20 +16,13 @@ import { useLogin } from '../hooks/useLogin';
 import { useNavigate } from 'react-router-dom';
 import logo from '../images/LOGO FINAL.webp'; // Import de l'image du logo
 
-function Copyright(props) {
-  return (
-    <Typography variant="body2" color="text.secondary" align="center" {...props}>
-      {'Copyright © '}
-      <Link color="inherit" href="https://mui.com/">
-        QCM PASS
-      </Link>{' '}
-      {new Date().getFullYear()}
-      {'.'}
-    </Typography>
-  );
-}
-
-const defaultTheme = createTheme();
+const defaultTheme = createTheme({
+  palette: {
+    background: {
+      default: '#f9ffff', // Couleur de fond pour toute la page
+    },
+  },
+});
 
 export default function SignIn() {
   const { login, error, isLoading } = useLogin();
@@ -57,23 +49,16 @@ export default function SignIn() {
 
   return (
     <ThemeProvider theme={defaultTheme}>
-      <Container component="main" maxWidth="xs">
-        <CssBaseline />
-        <Box
-          sx={{
-            marginTop: 8,
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-          }}
-        >
-          <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
-            <img src={logo} alt="logo" style={{ width: '200%', height: '200%' }} />
+      <CssBaseline />
+      <Container component="main" maxWidth="xs" sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', minHeight: '100vh' }}>
+        <Box sx={{ p: 4, bgcolor: '#f9ffff', borderRadius: 10, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+          <Avatar sx={{ m: 1, width: 100, height: 100 }}>
+            <img src={logo} alt="logo" style={{ width: '100%', height: '100%' }} />
           </Avatar>
           <Typography component="h1" variant="h5">
             Je me connecte
           </Typography>
-          <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
+          <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1, width: '100%' }}>
             <TextField
               margin="normal"
               required
@@ -113,8 +98,8 @@ export default function SignIn() {
             >
               Connexion
             </Button>
-            {error && <div className="error" style={{ color: 'red' }}>{error}</div>}
-            <Grid container>
+            {error && <div className="error" style={{ color: 'red', mt: 2 }}>{error}</div>}
+            <Grid container justifyContent="flex-end">
               <Grid item xs>
                 <Link href="/reset-password" variant="body2">
                   {"Mot de passe oublié?"}
@@ -128,14 +113,10 @@ export default function SignIn() {
             </Grid>
           </Box>
         </Box>
-        <Copyright sx={{ mt: 8, mb: 4 }} />
+        <Typography variant="body2" color="text.secondary" align="center" sx={{ mt: 8, pb: 4 }}>
+          © {new Date().getFullYear()} QCM PASS. Tous droits réservés.
+        </Typography>
       </Container>
     </ThemeProvider>
   );
 }
-
-
-
-
-
-

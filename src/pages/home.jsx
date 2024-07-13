@@ -4,7 +4,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import Navbar from "../components/Navbar";
 import { AuthContext } from "../context/AuthContext";
 import './home.css';  // Import the CSS file
-import image1 from '../images/image1.png'; // Adjust the path as needed
+import logo from '../images/LOGO FINAL.webp'; // Import de l'image du logo
 
 // Fonction pour le cas où l'utilisateur est connecté
 function HomeLoggedIn() {
@@ -130,7 +130,9 @@ function Home() {
   return (
     <Box className="flex-grow">
       {loading ? (
-        <Box className="fade-in" style={{ backgroundImage: `url(${image1})`, backgroundSize: 'cover', height: '100vh', width: '100vw' }}></Box>
+        <Box className="fade-in loading-logo-container">
+          <img src={logo} alt="Logo" className="loading-logo" />
+        </Box>
       ) : (
         <>
           <Navbar />
