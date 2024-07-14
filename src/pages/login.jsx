@@ -1,5 +1,4 @@
-import * as React from 'react';
-import { useState } from 'react';
+import React, { useState } from 'react';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -11,6 +10,10 @@ import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
+import InputAdornment from '@mui/material/InputAdornment';
+import IconButton from '@mui/material/IconButton';
+import Visibility from '@mui/icons-material/Visibility';
+import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { useLogin } from '../hooks/useLogin';
 import { useNavigate } from 'react-router-dom';
@@ -52,7 +55,7 @@ export default function SignIn() {
       <CssBaseline />
       <Container component="main" maxWidth="xs" sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', minHeight: '100vh' }}>
         <Box sx={{ p: 4, bgcolor: '#f9ffff', borderRadius: 10, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-          <Avatar sx={{ m: 1, width: 100, height: 100 }}>
+          <Avatar sx={{ m: 1, width: 150, height: 150 }}>
             <img src={logo} alt="logo" style={{ width: '100%', height: '100%' }} />
           </Avatar>
           <Typography component="h1" variant="h5">
@@ -78,16 +81,19 @@ export default function SignIn() {
               type={showPassword ? 'text' : 'password'}
               id="password"
               autoComplete="current-password"
-            />
-            <FormControlLabel
-              control={
-                <Checkbox
-                  checked={showPassword}
-                  onChange={handleToggleShowPassword}
-                  color="primary"
-                />
-              }
-              label="Afficher le mot de passe"
+              InputProps={{
+                endAdornment: (
+                  <InputAdornment position="end">
+                    <IconButton
+                      aria-label="toggle password visibility"
+                      onClick={handleToggleShowPassword}
+                      edge="end"
+                    >
+                      {showPassword ? <VisibilityOff /> : <Visibility />}
+                    </IconButton>
+                  </InputAdornment>
+                ),
+              }}
             />
             <Button
               type="submit"

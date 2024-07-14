@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React, { useState } from 'react';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -8,6 +8,11 @@ import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
+import InputAdornment from '@mui/material/InputAdornment';
+import IconButton from '@mui/material/IconButton';
+import Visibility from '@mui/icons-material/Visibility';
+import VisibilityOff from '@mui/icons-material/VisibilityOff';
+import LinearProgress from '@mui/material/LinearProgress';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { useSignup } from '../hooks/useSignup';
 import { useNavigate } from 'react-router-dom';
@@ -21,10 +26,48 @@ const defaultTheme = createTheme({
   },
 });
 
+const evaluatePassword = (password) => {
+  const criteria = [
+    { regex: /.{8,}/, message: 'Il faut au moins 8 caractères' },
+    { regex: /[A-Z]/, message: 'Il manque une majuscule' },
+    { regex: /[0-9]/, message: 'Il faut des numéros' },
+    { regex: /[^A-Za-z0-9]/, message: 'Il manque un caractère spécial' },
+  ];
+
+  const messages = criteria
+    .filter((criterion) => !criterion.regex.test(password))
+    .map((criterion) => criterion.message);
+
+  return {
+    strength: criteria.length - messages.length,
+    messages,
+  };
+};
+
+const getPasswordStrengthColor = (strength) => {
+  switch (strength) {
+    case 0:
+    case 1:
+    case 2:
+      return 'red';
+    case 3:
+      return 'orange';
+    case 4:
+      return 'green';
+    default:
+      return 'red';
+  }
+};
+
 export default function SignUp() {
   const { signup, error, isLoading } = useSignup();
   const navigate = useNavigate();
-  const [confirmPasswordError, setConfirmPasswordError] = React.useState('');
+  const [confirmPasswordError, setConfirmPasswordError] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [password, setPassword] = useState('');
+  const [passwordStrengthValue, setPasswordStrengthValue] = useState(0);
+  const [passwordErrors, setPasswordErrors] = useState([]);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -52,12 +95,20 @@ export default function SignUp() {
     }
   };
 
+  const handlePasswordChange = (event) => {
+    const newPassword = event.target.value;
+    setPassword(newPassword);
+    const { strength, messages } = evaluatePassword(newPassword);
+    setPasswordStrengthValue(strength);
+    setPasswordErrors(messages);
+  };
+
   return (
     <ThemeProvider theme={defaultTheme}>
       <CssBaseline />
       <Container component="main" maxWidth="xs" sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', minHeight: '100vh' }}>
         <Box sx={{ p: 4, bgcolor: 'background.default', borderRadius: 10, display: 'flex', flexDirection: 'column', alignItems: 'center', width: '100%' }}>
-        <Avatar sx={{ m: 1, width: 150, height: 150 }}>
+          <Avatar sx={{ m: 1, width: 150, height: 150 }}>
             <img src={logo} alt="logo" style={{ width: '100%', height: '100%' }} />
           </Avatar>
           <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 3, width: '100%' }}>
@@ -99,10 +150,53 @@ export default function SignUp() {
                   fullWidth
                   name="password"
                   label="Mot de passe"
-                  type="password"
+                  type={showPassword ? 'text' : 'password'}
                   id="password"
                   autoComplete="new-password"
+                  value={password}
+                  onChange={handlePasswordChange}
+                  InputProps={{
+                    endAdornment: (
+                      <InputAdornment position="end">
+                        <IconButton
+                          aria-label="toggle password visibility"
+                          onClick={() => setShowPassword(!showPassword)}
+                          edge="end"
+                        >
+                          {showPassword ? <VisibilityOff /> : <Visibility />}
+                        </IconButton>
+                      </InputAdornment>
+                    )
+                  }}
                 />
+                <LinearProgress
+                  variant="determinate"
+                  value={(passwordStrengthValue / 4) * 100}
+                  sx={{
+                    height: 10,
+                    borderRadius: 5,
+                    backgroundColor: '#e0e0e0',
+                    '& .MuiLinearProgress-bar': {
+                      backgroundColor: getPasswordStrengthColor(passwordStrengthValue),
+                    },
+                  }}
+                />
+                <Grid container spacing={1} sx={{ mt: 1 }}>
+                  {passwordErrors.slice(0, 2).map((error, index) => (
+                    <Grid item xs={6} key={index}>
+                      <Typography variant="body2" color="error">
+                        {error}
+                      </Typography>
+                    </Grid>
+                  ))}
+                  {passwordErrors.slice(2).map((error, index) => (
+                    <Grid item xs={6} key={index}>
+                      <Typography variant="body2" color="error">
+                        {error}
+                      </Typography>
+                    </Grid>
+                  ))}
+                </Grid>
               </Grid>
               <Grid item xs={12}>
                 <TextField
@@ -110,9 +204,22 @@ export default function SignUp() {
                   fullWidth
                   name="confirmPassword"
                   label="Confirmer le mot de passe"
-                  type="password"
+                  type={showConfirmPassword ? 'text' : 'password'}
                   id="confirmPassword"
                   autoComplete="new-password"
+                  InputProps={{
+                    endAdornment: (
+                      <InputAdornment position="end">
+                        <IconButton
+                          aria-label="toggle confirm password visibility"
+                          onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                          edge="end"
+                        >
+                          {showConfirmPassword ? <VisibilityOff /> : <Visibility />}
+                        </IconButton>
+                      </InputAdornment>
+                    )
+                  }}
                 />
               </Grid>
               <Grid item xs={12}>
