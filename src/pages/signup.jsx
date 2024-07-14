@@ -57,12 +57,9 @@ export default function SignUp() {
       <CssBaseline />
       <Container component="main" maxWidth="xs" sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', minHeight: '100vh' }}>
         <Box sx={{ p: 4, bgcolor: 'background.default', borderRadius: 10, display: 'flex', flexDirection: 'column', alignItems: 'center', width: '100%' }}>
-        <Avatar sx={{ m: 1, width: 100, height: 100 }}>
+        <Avatar sx={{ m: 1, width: 150, height: 150 }}>
             <img src={logo} alt="logo" style={{ width: '100%', height: '100%' }} />
           </Avatar>
-          <Typography component="h1" variant="h5">
-            Inscris-toi et entraîne-toi avec nous!
-          </Typography>
           <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 3, width: '100%' }}>
             <Grid container spacing={2}>
               <Grid item xs={12} sm={6}>
@@ -116,17 +113,6 @@ export default function SignUp() {
                   type="password"
                   id="confirmPassword"
                   autoComplete="new-password"
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <TextField
-                  required
-                  fullWidth
-                  name="adresse"
-                  label="Adresse"
-                  type="text"
-                  id="adresse"
-                  autoComplete="adresse"
                 />
               </Grid>
               <Grid item xs={12}>
