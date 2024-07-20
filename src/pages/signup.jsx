@@ -91,7 +91,7 @@ export default function SignUp() {
 
     const success = await signup(username, email, password, nom, prenom, numero, adresse);
     if (success) {
-      navigate('/');
+      navigate('/signup-success');
     }
   };
 
