@@ -3,8 +3,6 @@ import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
 import TextField from '@mui/material/TextField';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Checkbox from '@mui/material/Checkbox';
 import Link from '@mui/material/Link';
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
@@ -53,15 +51,56 @@ export default function SignIn() {
   return (
     <ThemeProvider theme={defaultTheme}>
       <CssBaseline />
-      <Container component="main" maxWidth="xs" sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', minHeight: '100vh' }}>
-        <Box sx={{ p: 4, bgcolor: '#f9ffff', borderRadius: 10, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-          <Avatar sx={{ m: 1, width: 150, height: 150 }}>
+      <Container 
+        component="main" 
+        maxWidth="xs" 
+        sx={{ 
+          display: 'flex', 
+          flexDirection: 'column', 
+          alignItems: 'center', 
+          justifyContent: 'center', 
+          minHeight: '100vh', 
+          padding: 2 
+        }}
+      >
+        <Box 
+          sx={{ 
+            p: 4, 
+            bgcolor: '#f9ffff', 
+            borderRadius: 10, 
+            display: 'flex', 
+            flexDirection: 'column', 
+            alignItems: 'center', 
+            width: '100%',
+            // Responsive padding
+            '@media (max-width:600px)': {
+              p: 2,
+            }
+          }}
+        >
+          <Avatar 
+            sx={{ 
+              m: 1, 
+              width: 120, 
+              height: 120,
+              // Responsive size
+              '@media (max-width:600px)': {
+                width: 100,
+                height: 100,
+              }
+            }}
+          >
             <img src={logo} alt="logo" style={{ width: '100%', height: '100%' }} />
           </Avatar>
-          <Typography component="h1" variant="h5">
+          <Typography component="h1" variant="h5" sx={{ mb: 2 }}>
             Je me connecte
           </Typography>
-          <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1, width: '100%' }}>
+          <Box 
+            component="form" 
+            onSubmit={handleSubmit} 
+            noValidate 
+            sx={{ width: '100%' }}
+          >
             <TextField
               margin="normal"
               required
@@ -99,14 +138,14 @@ export default function SignIn() {
               type="submit"
               fullWidth
               variant="contained"
-              sx={{ mt: 3, mb: 2 }}
+              sx={{ mt: 2, mb: 2 }}
               disabled={isLoading}
             >
               Connexion
             </Button>
-            {error && <div className="error" style={{ color: 'red', mt: 2 }}>{error}</div>}
-            <Grid container justifyContent="flex-end">
-              <Grid item xs>
+            {error && <Typography color="error" sx={{ mt: 1 }}>{error}</Typography>}
+            <Grid container spacing={2} justifyContent="center" sx={{ mt: 2 }}>
+              <Grid item>
                 <Link href="/reset-password" variant="body2">
                   {"Mot de passe oublié?"}
                 </Link>
@@ -119,7 +158,7 @@ export default function SignIn() {
             </Grid>
           </Box>
         </Box>
-        <Typography variant="body2" color="text.secondary" align="center" sx={{ mt: 8, pb: 4 }}>
+        <Typography variant="body2" color="text.secondary" align="center" sx={{ mt: 4 }}>
           © {new Date().getFullYear()} QCM PASS. Tous droits réservés.
         </Typography>
       </Container>

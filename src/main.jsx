@@ -21,7 +21,6 @@ import { AuthContextProvider } from './context/AuthContext';
 import Modo from './pages/modo';
 import ChapterDetails from './pages/chapterDetails';
 import SignupSuccessAnimation from './components/SignupSuccessAnimation';
-import Layout from './components/Layout';  // Importer le composant Layout
 import { CssBaseline } from '@mui/material';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
@@ -32,23 +31,23 @@ root.render(
       <Router>
         <Routes>
           <Route path="/" element={<App />}>
-            <Route index={true} element={<Layout><Home /></Layout>} />
-            <Route path="reset-password" element={<Layout><ForgottenPassword /></Layout>} />
-            <Route path="reset-password2" element={<Layout><ForgottenPasswordNum /></Layout>} />
-            <Route path="login" element={<Layout><SignIn /></Layout>} />
-            <Route path="signup" element={<Layout><SignUp /></Layout>} />
-            <Route path="quiz" element={<Layout><Quiz /></Layout>} />
-            <Route path="chap-quiz" element={<Layout><ChaptersPageQuiz /></Layout>} />
-            <Route path="chap-cours" element={<Layout><ChaptersPageCours /></Layout>} />
-            <Route path="matieres-cours" element={<Layout><MatieresPageCours /></Layout>} />
-            <Route path="matieres-quiz" element={<Layout><MatieresPageQuiz /></Layout>} />
-            <Route path="checkout" element={<Layout><Checkout /></Layout>} />
-            <Route path="settings" element={<Layout><Settings /></Layout>} />
-            <Route path="progress" element={<Layout><Progress /></Layout>} />
-            <Route path="score/:scoreId" element={<Layout><ScoreDetails /></Layout>} />
-            <Route path="/signup-success" element={<Layout><SignupSuccessAnimation /></Layout>} />
-            <Route path="/modo" element={<Layout><Modo /></Layout>} />
-            <Route path="/chapitre/:chapterId" element={<Layout><ChapterDetails /></Layout>} />
+            <Route index={true} element={<Home />} />
+            <Route path="reset-password" element={<ForgottenPassword />} />
+            <Route path="reset-password2" element={<ForgottenPasswordNum />} />
+            <Route path="login" element={<SignIn />} />
+            <Route path="signup" element={<SignUp />} />
+            <Route path="quiz" element={<Quiz />} />
+            <Route path="chap-quiz" element={<ChaptersPageQuiz />} />
+            <Route path="chap-cours" element={<ChaptersPageCours />} />
+            <Route path="matieres-cours" element={<MatieresPageCours />} />
+            <Route path="matieres-quiz" element={<MatieresPageQuiz />} />
+            <Route path="checkout" element={<Checkout />} />
+            <Route path="settings" element={<Settings />} />
+            <Route path="progress" element={<Progress />} />
+            <Route path="score/:scoreId" element={<ScoreDetails />} />
+            <Route path="/signup-success" element={<SignupSuccessAnimation />} />
+            <Route path="/modo" element={<Modo />} />
+            <Route path="/chapitre/:chapterId" element={<ChapterDetails />} />
           </Route>
         </Routes>
       </Router>
