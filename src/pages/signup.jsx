@@ -106,9 +106,31 @@ export default function SignUp() {
   return (
     <ThemeProvider theme={defaultTheme}>
       <CssBaseline />
-      <Container component="main" maxWidth="xs" sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', minHeight: '100vh' }}>
-        <Box sx={{ p: 4, bgcolor: 'background.default', borderRadius: 10, display: 'flex', flexDirection: 'column', alignItems: 'center', width: '100%' }}>
-          <Avatar sx={{ m: 1, width: 150, height: 150 }}>
+      <Container
+        component="main"
+        maxWidth="xs"
+        sx={{
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          justifyContent: 'center',
+          minHeight: '100vh',
+          padding: 2,
+        }}
+      >
+        <Box
+          sx={{
+            p: 4,
+            bgcolor: 'background.default',
+            borderRadius: 10,
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            width: '100%',
+            maxWidth: 'xs', // S'assure que le conteneur ne dépasse pas la largeur maximale définie
+          }}
+        >
+          <Avatar sx={{ m: 1, width: 100, height: 100 }}>
             <img src={logo} alt="logo" style={{ width: '100%', height: '100%' }} />
           </Avatar>
           <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 3, width: '100%' }}>
@@ -183,14 +205,14 @@ export default function SignUp() {
                 />
                 <Grid container spacing={1} sx={{ mt: 1 }}>
                   {passwordErrors.slice(0, 2).map((error, index) => (
-                    <Grid item xs={6} key={index}>
+                    <Grid item xs={12} sm={6} key={index}>
                       <Typography variant="body2" color="error">
                         {error}
                       </Typography>
                     </Grid>
                   ))}
                   {passwordErrors.slice(2).map((error, index) => (
-                    <Grid item xs={6} key={index}>
+                    <Grid item xs={12} sm={6} key={index}>
                       <Typography variant="body2" color="error">
                         {error}
                       </Typography>
@@ -254,8 +276,8 @@ export default function SignUp() {
             >
               Continuer
             </Button>
-            {error && <div className="error" style={{ color: 'red', mt: 2 }}>{error}</div>}
-            {confirmPasswordError && <div className="error" style={{ color: 'red', mt: 2 }}>{confirmPasswordError}</div>}
+            {error && <Typography color="error" sx={{ mt: 2 }}>{error}</Typography>}
+            {confirmPasswordError && <Typography color="error" sx={{ mt: 2 }}>{confirmPasswordError}</Typography>}
             <Grid container justifyContent="flex-end">
               <Grid item>
                 <Link href="/login" variant="body2">

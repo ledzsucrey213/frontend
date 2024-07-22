@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Box from '@mui/material/Box';
+import firstImage from '../images/1.png';
+import secondImage from '../images/2.png';
 
 const SignupSuccessAnimation = () => {
   const navigate = useNavigate();
@@ -27,13 +29,13 @@ const SignupSuccessAnimation = () => {
         alignItems: 'center',
         justifyContent: 'center',
         minHeight: '100vh',
-        backgroundColor: '#f9ffff',
+        backgroundColor: '#e4eefd', // Couleur de fond spécifique pour ce composant
         p: 4
       }}
     >
       <Box
         component="img"
-        src="../images/1.png" // Remplacez par le chemin de votre première image
+        src={firstImage}
         alt="First Image"
         sx={{
           width: '100%',
@@ -45,7 +47,7 @@ const SignupSuccessAnimation = () => {
       />
       <Box
         component="img"
-        src="../images/2.png" // Remplacez par le chemin de votre deuxième image
+        src={secondImage}
         alt="Second Image"
         sx={{
           width: '100%',
