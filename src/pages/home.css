@@ -95,20 +95,30 @@
       opacity: 1;
     }
   }
-  
-  .loading-logo-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    width: 100vw;
-    background-color: #fff; /* Fond blanc, vous pouvez ajuster la couleur selon vos besoins */
-  }
-  
-  .loading-logo {
-    max-width: 80%;
-    max-height: 80%;
-    width: auto;
-    height: auto;
-  }
+  /* home.css */
+
+/* Conteneur pour le logo de chargement */
+.loading-logo-container {
+  display: flex;
+  justify-content: center; /* Centre horizontalement */
+  align-items: center;     /* Centre verticalement */
+  height: 100vh;           /* Prend toute la hauteur de la fenêtre */
+  width: 100vw;            /* Prend toute la largeur de la fenêtre */
+  background-color: #fff;  /* Fond blanc */
+  position: absolute;      /* Assure que le conteneur occupe toute la fenêtre */
+  top: 0;                  /* Positionne le conteneur en haut de la page */
+  left: 0;                 /* Positionne le conteneur à gauche de la page */
+  margin: 0;               /* Retire toute marge */
+}
+
+/* Logo de chargement */
+.loading-logo {
+  max-width: 80%;  /* Limite la largeur du logo à 80% de la largeur du conteneur */
+  max-height: 80%; /* Limite la hauteur du logo à 80% de la hauteur du conteneur */
+  width: auto;     /* Maintient les proportions de l'image */
+  height: auto;    /* Maintient les proportions de l'image */
+  object-fit: contain; /* Assure que l'image est contenue dans les dimensions données */
+}
+
+
   
