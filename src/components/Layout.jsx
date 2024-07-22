@@ -1,37 +1,31 @@
+// src/components/Layout.jsx
 import React from 'react';
 import { Box, Container } from '@mui/material';
 
 const Layout = ({ children }) => {
   return (
-    <Container
-      component="main"
-      maxWidth="xs"
+    <Box
       sx={{
         display: 'flex',
         flexDirection: 'column',
-        alignItems: 'center',
-        justifyContent: 'center',
         minHeight: '100vh',
-        p: 2, // Ajoutez du padding autour du contenu
       }}
     >
-      <Box
+      <Container
         sx={{
-          p: 4,
-          bgcolor: 'background.default',
-          borderRadius: 10,
-          width: '100%',
-          maxWidth: 'sm', // Largeur maximale pour les grands écrans
-          boxShadow: 3, // Ajoute une ombre pour plus de profondeur
+          flex: '1 0 auto',
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'center',
           justifyContent: 'center',
+          padding: { xs: 2, sm: 4, md: 6 },
+          width: '100%', // Assure que le conteneur utilise toute la largeur
+          maxWidth: '100%', // Empêche le dépassement de la largeur
         }}
       >
         {children}
-      </Box>
-    </Container>
+      </Container>
+    </Box>
   );
 };
 
